@@ -1,31 +1,35 @@
 package de.htwg.scala.Pentago.model
 
-class Tile (userOccupation: Array[Array[Int]]) {
+class Tile (val userOccupation: Array[Array[Int]]) {
 
   def this() {
-    this(-1,-1,-1,
-         -1,-1,-1,
-         -1,-1,-1)
+    this(Array(
+      Array(-1,-1,-1),
+      Array(-1,-1,-1),
+      Array(-1,-1,-1)))
   }
 
   def getOrb(xCoord: Int, yCoord: Int): Int = {
-    // ToDo
-    return 0
+    userOccupation(xCoord)(yCoord)
   }
 
   def rotate(str: String): Tile = {
-    val reducedString = reducedString(str)
+    val reducedString = reduceRotateString(str)
     for (leftRight <- reducedString) {
       leftRight match {
-        case 'l' => return rotateLeft()
-        case 'r' => return rotateRight()
+          case 'l' => return rotateLeft()
+          case 'r' => return rotateRight()
+          case _ => return this
       }
     }
+    this
   }
 
   def rotateLeft(): Tile = {
-    // ToDo
-    return new Tile()
+    new Tile(Array(
+      Array(userOccupation(0)(2), userOccupation(1)(2), userOccupation(2)(2)),
+      Array(userOccupation(0)(1), userOccupation(1)(1), userOccupation(2)(1)),
+      Array(userOccupation(0)(0), userOccupation(1)(0), userOccupation(2)(0))))
   }
 
   def rotateRight(): Tile = {

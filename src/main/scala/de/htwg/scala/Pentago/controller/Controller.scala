@@ -14,6 +14,6 @@ class Controller {
 
   def getAllTiles(): Array[Array[Tile]] = {
     // ToDO
-    return new Nothing
+    return new Array[Array[Tile]](3)
   }
 }
