@@ -13,14 +13,11 @@ class Tile (val userOccupation: Array[Array[Int]]) {
     userOccupation(xCoord)(yCoord)
   }
 
-  def rotate(str: String): Tile = {
-    val reducedString = reduceRotateString(str)
-    for (leftRight <- reducedString) {
-      leftRight match {
+  def rotate(direction: Char): Tile = {
+    direction match {
           case 'l' => return rotateLeft()
           case 'r' => return rotateRight()
           case _ => return this
-      }
     }
     this
   }
