@@ -1,6 +1,7 @@
 package de.htwg.scala.Pentago.model
 
 class Tile (userOccupation: Array[Array[Int]]) {
+/*
 
   def this() {
     this(-1,-1,-1,
@@ -61,4 +62,5 @@ class Tile (userOccupation: Array[Array[Int]]) {
       ""
     }
   }
+  */
 }

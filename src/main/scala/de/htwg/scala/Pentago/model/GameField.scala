@@ -3,6 +3,7 @@ package de.htwg.scala.Pentago.model
 import java.util.UUID
 
 class GameField {
+  /*
     val tiles = Array(
       Array(new Tile, new Tile),
       Array(new Tile, new Tile)
@@ -21,4 +22,5 @@ class GameField {
 
     return length
   }
+  */
 }
