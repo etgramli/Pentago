@@ -9,6 +9,13 @@ class Tile (val userOccupation: Array[Array[Int]]) {
       Array(-1,-1,-1)))
   }
 
+  def placeOrb(xCoord: Int, yCoord: Int, playerNum: Int): Tile = {
+    // ToDo
+    val occupation = this.userOccupation
+    occupation(xCoord)(yCoord) = playerNum
+    new Tile(occupation)
+  }
+
   def getOrb(xCoord: Int, yCoord: Int): Int = {
     userOccupation(xCoord)(yCoord)
   }
