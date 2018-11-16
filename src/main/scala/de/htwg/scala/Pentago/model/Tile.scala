@@ -2,12 +2,12 @@ package de.htwg.scala.Pentago.model
 
 class Tile (userOccupation: Array[Array[Int]]) {
 
-  def this() = {
+  def this() {
     this(-1,-1,-1,
          -1,-1,-1,
          -1,-1,-1)
   }
-
+/*
   def rotate(str: String): Tile = {
     val reducedString = reducedString(str)
     var temp: Tile
@@ -15,7 +15,7 @@ class Tile (userOccupation: Array[Array[Int]]) {
       if (leftRight == 'l') {
         temp = rotateLeft()
       } else if (leftRight == 'r')
-        rotateRight()
+        temp = rotateRight()
     }
   }
 
@@ -29,7 +29,7 @@ class Tile (userOccupation: Array[Array[Int]]) {
     temp = rotateLeft()
     temp
   }
-
+*/
   def reduceRotateString(str: String): String = {
     var left = str.count(_ == 'l')
     var right = str.count(_ == 'r')
