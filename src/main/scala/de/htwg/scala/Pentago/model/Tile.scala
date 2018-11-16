@@ -7,20 +7,25 @@ class Tile (userOccupation: Array[Array[Int]]) {
          -1,-1,-1,
          -1,-1,-1)
   }
-/*
+
+  def getOrb(xCoord: Int, yCoord: Int): Int = {
+    // ToDo
+    return 0
+  }
+
   def rotate(str: String): Tile = {
     val reducedString = reducedString(str)
-    var temp: Tile
-    for (var leftRight <- reducedString) {
-      if (leftRight == 'l') {
-        temp = rotateLeft()
-      } else if (leftRight == 'r')
-        temp = rotateRight()
+    for (leftRight <- reducedString) {
+      leftRight match {
+        case 'l' => return rotateLeft()
+        case 'r' => return rotateRight()
+      }
     }
   }
 
   def rotateLeft(): Tile = {
     // ToDo
+    return new Tile()
   }
 
   def rotateRight(): Tile = {
@@ -29,7 +34,7 @@ class Tile (userOccupation: Array[Array[Int]]) {
     temp = rotateLeft()
     temp
   }
-*/
+
   def reduceRotateString(str: String): String = {
     var left = str.count(_ == 'l')
     var right = str.count(_ == 'r')
@@ -55,24 +60,5 @@ class Tile (userOccupation: Array[Array[Int]]) {
     } else {
       ""
     }
-  }
-}
-
-class UserMatrix (data: Array[Array[Int]]) {
-  def rotateLeft(): UserMatrix = {
-    this(
-    Array(
-      Array(data(1)(3), data(2)(3), data(3)(3)),
-      Array(data(1)(2), data(2)(2), data(3)(2)),
-      Array(data(1)(1), data(2)(1), data(3)(1))
-    ))
-  }
-  def rotateRight(): UserMatrix = {
-    this(
-      Array(
-        Array(data(3)(1), data(2)(1), data(1)(1)),
-        Array(data(3)(2), data(2)(2), data(1)(2)),
-        Array(data(3)(3), data(2)(3), data(1)(3))
-    ))
   }
 }
