@@ -14,8 +14,7 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   def getAllTiles(): Array[Array[Tile]] = {
-    // ToDO
-    new Array[Array[Tile]](3)
+    gameField.tiles
   }
 
   def getGameFiled(): Array[Array[Int]] = {
