@@ -31,4 +31,19 @@ class TileSpec extends FlatSpec {
     val rotated = original.rotateRight()
     rotated.userOccupation should equal (expected.userOccupation)
   }
+
+  "A Tile" should "have one Orb of Player 1" in {
+    val original = new Tile(Array(
+      Array(0, 0, 0),
+      Array(0, 0, 0),
+      Array(0, 0, 0)
+    ))
+    val expected = new Tile(Array(
+      Array(0, 0, 0),
+      Array(0, 0, 1),
+      Array(0, 0, 0)
+    ))
+    val placed = original.placeOrb(1, 2, 1)
+    placed.userOccupation should equal(expected.userOccupation)
+  }
 }

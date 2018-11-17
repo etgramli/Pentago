@@ -27,19 +27,19 @@ class GameField(val tiles: Array[Array[Tile]]) {
     val xTileCoord = xCoord % 3
     val yTileCoord = yCoord % 3
     (xTileNumber, yTileNumber) match {
-      case (0, 0) => new GameField(Array(
+      case (0, 0) => return new GameField(Array(
         Array(tiles(0)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(0)(1)),
         Array(tiles(1)(0),                                                tiles(1)(1))
       ))
-      case (0, 1) => new GameField(Array(
+      case (0, 1) => return new GameField(Array(
         Array(tiles(0)(0), tiles(0)(1).placeOrb(xTileCoord, yTileCoord, playerNumber)),
         Array(tiles(1)(0), tiles(1)(1))
       ))
-      case (1, 0) =>  new GameField(Array(
+      case (1, 0) => return new GameField(Array(
         Array(tiles(0)(0),                                                tiles(0)(1)),
         Array(tiles(1)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(1)(1))
       ))
-      case (1, 1) => new GameField(Array(
+      case (1, 1) => return new GameField(Array(
         Array(tiles(0)(0), tiles(0)(1)),
         Array(tiles(1)(0), tiles(1)(1).placeOrb(xTileCoord, yTileCoord, playerNumber))
       ))
@@ -48,7 +48,7 @@ class GameField(val tiles: Array[Array[Tile]]) {
     this
   }
 
-  def rotateRight(tileNumber: Int, direction: Char):  GameField = {
+  def rotate(tileNumber: Int, direction: Char): GameField = {
     tileNumber match {
       case 0 => return new GameField(Array(
         Array(tiles(0)(0).rotate(direction), tiles(0)(1)),

@@ -6,7 +6,7 @@ import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 class Controller(var gameField: GameField, val players: Array[Player]) {
   // 'l' links, 'r' rechts
   def rotate(tileNumber: Int, direction: Char): Unit = {
-    this.gameField = gameField.rotateRight(tileNumber, direction)
+    this.gameField = gameField.rotate(tileNumber, direction)
   }
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Unit = {
