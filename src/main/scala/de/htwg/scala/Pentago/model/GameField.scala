@@ -70,4 +70,30 @@ class GameField(val tiles: Array[Array[Tile]]) {
     }
     this
   }
+
+  // Must only be used from Controller to test the win conditions
+  def rotateGameFieldLeft(): GameField = {
+    new GameField(Array(
+      Array(tiles(0)(1).rotateLeft(), tiles(1)(1).rotateLeft()),
+      Array(tiles(0)(0).rotateLeft(), tiles(1)(0).rotateLeft())
+    ))
+  }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[GameField]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: GameField =>
+      (that canEqual this) &&
+        size == that.size &&
+        tiles(0)(0) == that.tiles(0)(0) &&
+        tiles(0)(1) == that.tiles(0)(1) &&
+        tiles(1)(0) == that.tiles(1)(0) &&
+        tiles(1)(1) == that.tiles(1)(1)
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(size, tiles)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }

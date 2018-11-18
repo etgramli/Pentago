@@ -9,6 +9,7 @@ class Tile (val userOccupation: Array[Array[Int]]) {
       Array(-1,-1,-1)))
   }
 
+
   def placeOrb(xCoord: Int, yCoord: Int, playerNum: Int): Tile = {
     val occupation = this.userOccupation.transpose.transpose[Int]
     occupation(xCoord)(yCoord) = playerNum
@@ -64,5 +65,19 @@ class Tile (val userOccupation: Array[Array[Int]]) {
     } else {
       ""
     }
+  }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[Tile]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Tile =>
+      (that canEqual this) &&
+        userOccupation.deep == that.userOccupation.deep
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(userOccupation)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 }
