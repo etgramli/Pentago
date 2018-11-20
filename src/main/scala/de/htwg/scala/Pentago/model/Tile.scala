@@ -9,18 +9,22 @@ class Tile (val userOccupation: Array[Array[Int]]) {
       Array(-1,-1,-1)))
   }
 
+
+  def placeOrb(xCoord: Int, yCoord: Int, playerNum: Int): Tile = {
+    val occupation = this.userOccupation.transpose.transpose[Int]
+    occupation(xCoord)(yCoord) = playerNum
+    new Tile(occupation)
+  }
+
   def getOrb(xCoord: Int, yCoord: Int): Int = {
     userOccupation(xCoord)(yCoord)
   }
 
-  def rotate(str: String): Tile = {
-    val reducedString = reduceRotateString(str)
-    for (leftRight <- reducedString) {
-      leftRight match {
+  def rotate(direction: Char): Tile = {
+    direction match {
           case 'l' => return rotateLeft()
           case 'r' => return rotateRight()
           case _ => return this
-      }
     }
     this
   }
@@ -33,10 +37,7 @@ class Tile (val userOccupation: Array[Array[Int]]) {
   }
 
   def rotateRight(): Tile = {
-    var temp = rotateLeft()
-    temp = rotateLeft()
-    temp = rotateLeft()
-    temp
+    rotateLeft().rotateLeft().rotateLeft() // Because three times left is right
   }
 
   def reduceRotateString(str: String): String = {
@@ -64,5 +65,19 @@ class Tile (val userOccupation: Array[Array[Int]]) {
     } else {
       ""
     }
+  }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[Tile]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Tile =>
+      (that canEqual this) &&
+        userOccupation.deep == that.userOccupation.deep
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(userOccupation)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 }
