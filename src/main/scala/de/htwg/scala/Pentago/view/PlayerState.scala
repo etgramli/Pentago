@@ -1,23 +1,5 @@
 package de.htwg.scala.Pentago.view
 
-
-class Textview {
-
-  val playerSystem:PlayerSystem = new PlayerSystem()
-
-  def changePlayer(): Unit = {
-    playerSystem.changeState()
-  }
-
-  def displayPlayer(): Unit = {
-    println(playerSystem.displayState())
-  }
-
-  def getCurrentPlayer : PlayerState = {
-    playerSystem.currentPlayer
-  }
-}
-
 class PlayerSystem {
 
   var currentPlayer:PlayerState = new PlayerOne(this)
