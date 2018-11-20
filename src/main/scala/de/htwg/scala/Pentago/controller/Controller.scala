@@ -42,7 +42,23 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   def testWin(gameField: GameField): Int = {
-    // ToDo: Test vertical and diagonal rows
+    var playerNumber = -1
+    for (x <- 0 until gameField.size) {
+      for (y <- 0 until 2) {
+        playerNumber = testHorizontalRow(x, y, gameField)
+        if (playerNumber != -1) {
+          return playerNumber
+        }
+      }
+    }
+    for (x <- 0 until 2) {
+      for (y <- 0 until 2) {
+        playerNumber = testDiagonalRow(x, y, gameField)
+        if (playerNumber != -1) {
+          return playerNumber
+        }
+      }
+    }
     return -1
   }
 
