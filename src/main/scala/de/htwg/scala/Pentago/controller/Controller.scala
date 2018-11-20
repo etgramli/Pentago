@@ -4,6 +4,12 @@ import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 
 
 class Controller(var gameField: GameField, val players: Array[Player]) {
+
+  def this(playerOneName: String, playerTwoName: String) {
+    this(new GameField(), Array(new Player(0, playerOneName), new Player(1, playerTwoName)))
+  }
+
+
   // 'l' links, 'r' rechts
   def rotate(tileNumber: Int, direction: Char): Unit = {
     this.gameField = gameField.rotate(tileNumber, direction)
@@ -36,9 +42,9 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
       return playerNumber
     playerNumber = testWin(gameField.rotateGameFieldLeft())
     if (playerNumber != -1)
-      return playerNumber
-
-    return -1
+      playerNumber
+    else
+      -1
   }
 
   def testWin(gameField: GameField): Int = {
@@ -59,7 +65,7 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
         }
       }
     }
-    return -1
+    -1
   }
 
   def testHorizontalRow(xStart: Int, yStart: Int, gameField: GameField): Int = {
@@ -71,7 +77,7 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
         return -1
       }
     }
-    return playerNumber
+    playerNumber
   }
 
   def testDiagonalRow(xStart: Int, yStart: Int, gameField: GameField): Int = {
@@ -84,6 +90,6 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
         return -1
       }
     }
-    return playerNumber
+    playerNumber
   }
 }
