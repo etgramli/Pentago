@@ -1,7 +1,4 @@
 package de.htwg.scala.Pentago.model
 
-import java.util.UUID
-
-class Player {
-  val identifier = UUID.randomUUID()
+class Player(val number: Int, val name: String) {
 }
