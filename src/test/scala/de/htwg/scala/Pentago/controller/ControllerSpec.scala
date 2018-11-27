@@ -10,7 +10,7 @@ class ControllerSpec extends FlatSpec {
     for (y <- 0 until 6)
       controller.placeOrb(0, y, 0)
     controller.testWin() should contain(0)
-    controller.testWin() should not contain (1)
+    controller.testWin() should not contain 1
   }
 
   "Player 1" should "win with one diagonal line" in {
@@ -18,7 +18,7 @@ class ControllerSpec extends FlatSpec {
     for (x <- 0 until 6)
       controller.placeOrb(x, 0, 1)
     controller.testWin() should contain(1)
-    controller.testWin() should not contain (0)
+    controller.testWin() should not contain 0
   }
 
   "Player 0" should "win with one vertical line" in {
@@ -26,6 +26,6 @@ class ControllerSpec extends FlatSpec {
     for (x <- 0 until 6)
       controller.placeOrb(x, x, 0)
     controller.testWin() should contain(0)
-    controller.testWin() should not contain (1)
+    controller.testWin() should not contain 1
   }
 }
