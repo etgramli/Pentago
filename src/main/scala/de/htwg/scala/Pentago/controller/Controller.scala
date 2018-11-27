@@ -34,26 +34,20 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
-  def testWin(): Int = {
-    var playerNumber = -1
-
-    playerNumber = testWin(gameField)
-    if (playerNumber != -1)
-      return playerNumber
-    playerNumber = testWin(gameField.rotateGameFieldLeft())
-    if (playerNumber != -1)
-      playerNumber
-    else
-      -1
+  def testWin(): Set[Int] = {
+    val winnersHorizontal = testWin(gameField)
+    val winnersVertical = testWin(gameField.rotateGameFieldLeft())
+    winnersHorizontal union winnersVertical
   }
 
-  def testWin(gameField: GameField): Int = {
+  def testWin(gameField: GameField): Set[Int] = {
+    var winners = Set[Int]()
     var playerNumber = -1
     for (x <- 0 until gameField.size) {
       for (y <- 0 until 2) {
         playerNumber = testHorizontalRow(x, y, gameField)
         if (playerNumber != -1) {
-          return playerNumber
+          winners += playerNumber
         }
       }
     }
@@ -61,11 +55,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
       for (y <- 0 until 2) {
         playerNumber = testDiagonalRow(x, y, gameField)
         if (playerNumber != -1) {
-          return playerNumber
+          winners += playerNumber
         }
       }
     }
-    -1
+    winners
   }
 
   def testHorizontalRow(xStart: Int, yStart: Int, gameField: GameField): Int = {

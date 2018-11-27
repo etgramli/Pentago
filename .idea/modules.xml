@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pentago.iml" filepath="$PROJECT_DIR$/.idea/modules/Pentago.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pentago-build.iml" filepath="$PROJECT_DIR$/.idea/modules/pentago-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pentago-build.iml" filepath="$PROJECT_DIR$/.idea/modules/Pentago-build.iml" />
     </modules>
   </component>
 </project>
