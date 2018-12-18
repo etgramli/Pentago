@@ -28,4 +28,14 @@ class ControllerSpec extends FlatSpec {
     controller.testWin() should contain(0)
     controller.testWin() should not contain 1
   }
+
+  "Both Players" should "have win condition" in {
+    val controller = new Controller("Player 1", "Player 2")
+    for (x <- 0 until 6) {
+      controller.placeOrb(x, 2, 0)
+      controller.placeOrb(x, 1, 1)
+    }
+    controller.testWin() should contain(0)
+    controller.testWin() should contain(1)
+  }
 }
