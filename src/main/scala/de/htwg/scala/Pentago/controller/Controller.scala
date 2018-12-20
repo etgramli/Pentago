@@ -1,5 +1,9 @@
 package de.htwg.scala.Pentago.controller
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 
 
@@ -19,11 +23,12 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
   }
 
-  def getAllTiles(): Array[Array[Tile]] = {
-    gameField.tiles
+
+  def getAllTiles: Array[Array[Tile]] = {
+    gameField.tiles.clone()
   }
 
-  def getGameFiled(): Array[Array[Int]] = {
+  def getGameFiled: Array[Array[Int]] = {
     val gameFieldData = Array.ofDim[Int](gameField.size, gameField.size)
     for (x <- 0 until gameField.size) {
       for (y <- 0 until gameField.size) {
@@ -34,26 +39,23 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
-  def testWin(): Int = {
-    var playerNumber = -1
+  def testWin(): Set[Int] = {
+    val futureVertical = Future(testWin(gameField.rotateGameFieldLeft()))
+    val futureHorizontal = Future(testWin(gameField))
 
-    playerNumber = testWin(gameField)
-    if (playerNumber != -1)
-      return playerNumber
-    playerNumber = testWin(gameField.rotateGameFieldLeft())
-    if (playerNumber != -1)
-      playerNumber
-    else
-      -1
+    val winnersVertical = Await.result(futureVertical, 1 seconds)
+    val winnersHorizontal = Await.result(futureHorizontal, 1 seconds)
+    winnersHorizontal union winnersVertical
   }
 
-  def testWin(gameField: GameField): Int = {
+  def testWin(gameField: GameField): Set[Int] = {
+    var winners = Set[Int]()
     var playerNumber = -1
     for (x <- 0 until gameField.size) {
       for (y <- 0 until 2) {
         playerNumber = testHorizontalRow(x, y, gameField)
         if (playerNumber != -1) {
-          return playerNumber
+          winners += playerNumber
         }
       }
     }
@@ -61,11 +63,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
       for (y <- 0 until 2) {
         playerNumber = testDiagonalRow(x, y, gameField)
         if (playerNumber != -1) {
-          return playerNumber
+          winners += playerNumber
         }
       }
     }
-    -1
+    winners
   }
 
   def testHorizontalRow(xStart: Int, yStart: Int, gameField: GameField): Int = {
@@ -92,4 +94,5 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     }
     playerNumber
   }
+
 }

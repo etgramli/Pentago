@@ -1,7 +1,6 @@
 package de.htwg.scala.Pentago.model
 
 class Tile (val userOccupation: Array[Array[Int]]) {
-
   def this() {
     this(Array(
       Array(-1,-1,-1),
