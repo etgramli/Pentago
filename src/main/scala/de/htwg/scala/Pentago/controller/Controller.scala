@@ -1,5 +1,9 @@
 package de.htwg.scala.Pentago.controller
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 
 
@@ -36,8 +40,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
   def testWin(): Set[Int] = {
-    val winnersHorizontal = testWin(gameField)
-    val winnersVertical = testWin(gameField.rotateGameFieldLeft())
+    val futureVertical = Future(testWin(gameField.rotateGameFieldLeft()))
+    val futureHorizontal = Future(testWin(gameField))
+
+    val winnersVertical = Await.result(futureVertical, 1 seconds)
+    val winnersHorizontal = Await.result(futureHorizontal, 1 seconds)
     winnersHorizontal union winnersVertical
   }
 
