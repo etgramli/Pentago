@@ -19,7 +19,6 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
   }
 
-  /*
   def getAllTiles(): Array[Array[Tile]] = {
     gameField.tiles
   }
@@ -93,5 +92,4 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     }
     playerNumber
   }
-  */
 }

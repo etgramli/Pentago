@@ -19,6 +19,7 @@ class PlayerSystem {
 trait PlayerState{
   def changePlayer()
   def displayPlayer()
+  def getPlayerNumber:Int
 }
 
 class PlayerOne(system: PlayerSystem) extends PlayerState {
@@ -28,7 +29,11 @@ class PlayerOne(system: PlayerSystem) extends PlayerState {
   }
 
   override def displayPlayer(): Unit = {
-    println("playerOne")
+    println("Spieler 1 am Zug")
+  }
+
+  override def getPlayerNumber: Int = {
+    1
   }
 }
 
@@ -39,6 +44,10 @@ class PlayerTwo(system: PlayerSystem) extends PlayerState {
   }
 
   override def displayPlayer(): Unit = {
-    println("playerTwo")
+    println("Spieler 2 am Zug")
+  }
+
+  override def getPlayerNumber: Int = {
+    2
   }
 }

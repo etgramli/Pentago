@@ -1,6 +1,6 @@
 import de.htwg.scala.Pentago.view.{LineReader, PlayerOne, Textview}
 
-object HelloWorld {
+object main {
   def main(args: Array[String]): Unit = {
     createField()
   }
