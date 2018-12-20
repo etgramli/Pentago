@@ -1,14 +1,11 @@
-import de.htwg.scala.Pentago.view.{LineReader, PlayerOne, Textview}
+import de.htwg.scala.Pentago.controller.Controller
+import de.htwg.scala.Pentago.view.Textview
 
-object main {
-  def main(args: Array[String]): Unit = {
-    createField()
-  }
+object main extends App {
+  override def main(args: Array[String]): Unit = {
 
-  def createField(): Unit = {
-    //Todo: Create Gamefield over controller and give it to view
-    //Todo: Create while-Loop to play()
-
-    val lineReader = new LineReader()
+    val controller = new Controller("Player1", "Player2")
+    val textview = new Textview()
+    textview.play(controller)
   }
 }
