@@ -1,6 +1,6 @@
-import de.htwg.scala.Pentago.view.{PlayerOne, Textview}
+import de.htwg.scala.Pentago.view.{LineReader, PlayerOne, Textview}
 
-object HelloWorld {
+object main {
   def main(args: Array[String]): Unit = {
     createField()
   }
@@ -9,16 +9,6 @@ object HelloWorld {
     //Todo: Create Gamefield over controller and give it to view
     //Todo: Create while-Loop to play()
 
-    val textview = new Textview()
-    while(true){
-      textview.displayPlayer()
-      if(textview.getCurrentPlayer.isInstanceOf[PlayerOne]){
-        Thread.sleep(5000)
-        textview.changePlayer()
-      } else {
-        Thread.sleep(5000)
-        textview.changePlayer()
-      }
-    }
+    val lineReader = new LineReader()
   }
 }
