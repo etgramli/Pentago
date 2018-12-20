@@ -5,6 +5,28 @@ import Matchers._
 
 class ControllerSpec extends FlatSpec {
 
+  "Player 0" should "begin game" in {
+    val controller = new Controller("Player 0", "Player 1")
+
+    controller.getCurrentPlayerIndex() should be(0)
+  }
+
+  "Player 1" should "be second to place stone" in {
+    val controller = new Controller("Player 0", "Player 1")
+
+    controller.switchPlayer()
+    controller.getCurrentPlayerIndex() should be(1)
+  }
+
+  "Player 0" should "be third to place stone" in {
+    val controller = new Controller("Player 0", "Player 1")
+
+    controller.switchPlayer()
+    controller.switchPlayer()
+    controller.getCurrentPlayerIndex() should be(0)
+  }
+
+
   "Player 0" should "win with one horizontal line" in {
     val controller = new Controller("Player 1", "Player 2")
     for (y <- 0 until 6)
