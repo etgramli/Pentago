@@ -6,39 +6,31 @@ import scala.util.Try
 
 class Textview {
 
-  val playerSystem:PlayerSystem = new PlayerSystem()
-
   def play(controller: Controller): Unit ={
     //ToDo: Welcomeword
     drawMap(controller)
     while(true){
-      displayPlayer()
+      //ToDo: Nach dem aktuellen Spieler fragen
       //ToDo: Ask if rotate and if then rotate
       val coord:Coordinates = lineReader()
-      setStone(coord, getCurrentPlayer,controller)
+      setStone(coord, controller)
       drawMap(controller)
-      changePlayer()
     }
   }
 
-  def changePlayer(): Unit = {
-    playerSystem.changeState()
-  }
-
-  def displayPlayer(): Unit = {
-    playerSystem.displayState()
-  }
-
-  def getCurrentPlayer : PlayerState = {
-    playerSystem.currentPlayer
-  }
-
   def drawMap(controller:Controller): Unit = {
-    controller
+    //Draw the damn Map
+    val list = controller.getGameFiled()
+    var i = 0
+    while(i < 6){
+      println(list[i])
+      i += 1
+    }
+    println(list);
   }
 
-  def setStone(coordinates: Coordinates, playerState: PlayerState, controller:Controller): Unit  = {
-    controller.placeOrb(coordinates.getX, coordinates.getY,playerState.getPlayerNumber)
+  def setStone(coordinates: Coordinates, controller:Controller): Unit  = {
+    controller.placeOrb(coordinates.getX, coordinates.getY,0)
   }
 
   def lineReader():Coordinates = {
