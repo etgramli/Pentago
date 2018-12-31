@@ -18,15 +18,41 @@ class Textview {
     }
   }
 
+  def printList(args: TraversableOnce[_]): Unit = {
+    args.foreach(print)
+  }
+
   def drawMap(controller:Controller): Unit = {
-    //Draw the damn Map
-    val list = controller.getGameFiled()
-    var i = 0
-    while(i < 6){
-      println(list[i])
-      i += 1
+    val array = adjustArray(controller.getGameFiled())
+    for(x <- array){
+      printList(x)
+      println()
     }
-    println(list);
+  }
+
+  def adjustArray(arrays:Array[Array[Int]]): Array[Array[String]] = {
+    val allArrays = arrays.map(x => adjustSingleArray(x))
+    val line = Array[String](" ", "_", " ", "_", " ", "_", " ", "_", " ", "_", " ", " ", "_", " ", "_", " ", "_", " ", "_", " ")
+
+    val finalLine = Array[Array[String]](line)
+
+    Array[Array[String]]() ++ finalLine ++ allArrays ++ finalLine
+  }
+
+  /**
+    * Changes the given int array into string array, with | in the middle and on the edges
+    * @param array to change
+    * @return changed array
+    */
+  def adjustSingleArray(array:Array[Int]): Array[String] = {
+    val arr = array.map(x => x.toString)
+    for(x <- arr){
+      if(x == "-1"){
+        array(array.indexOf(x)) = "0"
+      }
+    }
+
+    Array[String]("|") ++ arr.take(3) ++ Array[String]("|") ++ arr.drop(3) ++ Array[String]("|")
   }
 
   def setStone(coordinates: Coordinates, controller:Controller): Unit  = {

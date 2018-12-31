@@ -23,11 +23,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
   }
 
-  def getAllTiles: Array[Array[Tile]] = {
+  def getAllTiles(): Array[Array[Tile]] = {
     gameField.tiles.clone()
   }
 
-  def getGameFiled: Array[Array[Int]] = {
+  def getGameFiled(): Array[Array[Int]] = {
     val gameFieldData = Array.ofDim[Int](gameField.size, gameField.size)
     for (x <- 0 until gameField.size) {
       for (y <- 0 until gameField.size) {
