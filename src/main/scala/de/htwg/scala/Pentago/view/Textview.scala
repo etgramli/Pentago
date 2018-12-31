@@ -1,27 +1,53 @@
 package de.htwg.scala.Pentago.view
 
 import de.htwg.scala.Pentago.controller.Controller
+import de.htwg.scala.Pentago.model.Player
 
 import scala.util.Try
 
 class Textview {
 
+  /**
+    * The "main" function to let the textview run
+    * @param controller from which the functions are from
+    */
   def play(controller: Controller): Unit ={
-    //ToDo: Welcomeword
-    drawMap(controller)
+    lineReaderHello(controller)
     while(true){
-      //ToDo: Nach dem aktuellen Spieler fragen
-      //ToDo: Ask if rotate and if then rotate
-      val coord:Coordinates = lineReader()
-      setStone(coord, controller)
+      println("----- Round Start -----")
+      drawPlayer(controller)
       drawMap(controller)
+      val coord:Coordinates = lineReaderCoordinates()
+      setStone(coord, controller)
+      lineReaderRotateField(controller)
+      drawMap(controller)
+      println("----- Round End -----")
+      nextPlayer(controller)
     }
   }
 
+  def nextPlayer(controller:Controller): Unit = {
+    //ToDo activate method for next player
+  }
+
+  /**
+    * Prints a List of Variables
+    * @param args the list which should be printed
+    */
   def printList(args: TraversableOnce[_]): Unit = {
     args.foreach(print)
   }
 
+  def drawPlayer(controller:Controller): Unit = {
+    //ToDo: Nach dem aktuellen Spieler fragen
+    val actualPlayer = "player 1"
+    println("The Round of Player " + actualPlayer)
+  }
+
+  /**
+    * Draws the map
+    * @param controller from which the array comes from
+    */
   def drawMap(controller:Controller): Unit = {
     val array = adjustArray(controller.getGameFiled())
     for(x <- array){
@@ -30,13 +56,18 @@ class Textview {
     }
   }
 
+  /**
+    * Changes the array of arrays to a acceptable looking text map
+    * @param arrays to change
+    * @return changed array of arrays
+    */
   def adjustArray(arrays:Array[Array[Int]]): Array[Array[String]] = {
     val allArrays = arrays.map(x => adjustSingleArray(x))
-    val line = Array[String](" ", "_", " ", "_", " ", "_", " ", "_", " ", "_", " ", " ", "_", " ", "_", " ", "_", " ", "_", " ")
+    val line = Array[String](" ", " ", "-", " ", "-", " ", "-", " ", " ", " ", "-", " ", "-", " ", "-")
 
     val finalLine = Array[Array[String]](line)
 
-    Array[Array[String]]() ++ finalLine ++ allArrays ++ finalLine
+    Array[Array[String]]() ++ finalLine ++ allArrays.take(3) ++ finalLine ++ allArrays.drop(3) ++ finalLine
   }
 
   /**
@@ -46,27 +77,85 @@ class Textview {
     */
   def adjustSingleArray(array:Array[Int]): Array[String] = {
     val arr = array.map(x => x.toString)
+
     for(x <- arr){
       if(x == "-1"){
-        array(array.indexOf(x)) = "0"
+        arr(arr.indexOf(x)) = "0 "
       }
     }
 
-    Array[String]("|") ++ arr.take(3) ++ Array[String]("|") ++ arr.drop(3) ++ Array[String]("|")
+    Array[String]("| ") ++ arr.take(3) ++ Array[String]("| ") ++ arr.drop(3) ++ Array[String]("|")
   }
 
+  /**
+    * Method to set a stone in the textview
+    * @param coordinates to set the stone
+    * @param controller to activate the function neccessary for this
+    */
   def setStone(coordinates: Coordinates, controller:Controller): Unit  = {
-    controller.placeOrb(coordinates.getX, coordinates.getY,0)
+    //ToDO: Get actual player
+    controller.placeOrb(coordinates.getX, coordinates.getY,1)
   }
 
-  def lineReader():Coordinates = {
+  def lineReaderRotateField(controller: Controller): Unit ={
+    print("Do you want to rotate on of the four fields? (y,n): ")
+    val answer = scala.io.StdIn.readChar()
+    if(answer == 'y'){
+      print("Which one? (1,2,3,4 from top left to bottom right): ")
+      var answer2 = scala.io.StdIn.readChar()
+      while(answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4'){
+        if(answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4'){
+          print("Please decide for 1 to 4: ")
+          answer2 = scala.io.StdIn.readChar()
+        } else {
+          print("In which directio? (l, r): ")
+          var answer3 = scala.io.StdIn.readChar()
+          while(answer3 != 'l' && answer3 != 'r'){
+            if(answer3 != 'l' && answer3 != 'r'){
+              print("Please insert l for left and r for right: ")
+              answer3 = scala.io.StdIn.readChar()
+            } else {
+              controller.rotate(answer2.toInt - 1, answer3)
+            }
+          }
+        }
+      }
+    } else if(answer != 'n'){
+      println("Please insert y for yes or n for no")
+    }
+  }
+
+  def lineReaderHello(controller:Controller): Unit = {
+    var player1Name = "player 1"
+    var player2Name = "player 2"
+
+    println("Welcome to Pentago! Please insert playernames:")
+    print("Player 1: ")
+
+    player1Name = scala.io.StdIn.readLine()
+
+    print("Player 2: ")
+    player2Name = scala.io.StdIn.readLine()
+
+    controller.players(0) = new Player(1,player1Name)
+    controller.players(1) = new Player(2,player2Name)
+
+    println("Have Fun!")
+  }
+
+  /**
+    * Linereader to read the coordinates
+    * @return the coordinates
+    */
+  def lineReaderCoordinates():Coordinates = {
 
     val coord: Coordinates = new Coordinates
 
     println("Please insert a number from 1 to 6 for x: ")
-    while (coord.getY < 0 || coord.getY >= 6) {
+    while (coord.getX < 0 || coord.getX >= 6) {
       val line = scala.io.StdIn.readLine()
       Try(coord.setX(line.toInt - 1)).getOrElse(coord.setX(-2))
+      println(line + " " + coord.getX)
       if (coord.getX < 0 || coord.getX >= 6) println("Please insert a correct number from 1 to 6! Try again: ")
     }
 
@@ -81,6 +170,9 @@ class Textview {
   }
 }
 
+/**
+  * Class for the Coordinates to easier manipulate them
+  */
 class Coordinates {
   var x:Int = -1
   var y:Int = -1
