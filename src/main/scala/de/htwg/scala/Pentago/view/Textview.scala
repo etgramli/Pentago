@@ -7,6 +7,8 @@ import scala.util.Try
 
 class Textview {
 
+  var counter = 1
+
   /**
     * The "main" function to let the textview run
     * @param controller from which the functions are from
@@ -14,20 +16,16 @@ class Textview {
   def play(controller: Controller): Unit ={
     lineReaderHello(controller)
     while(true){
-      println("----- Round Start -----")
-      drawPlayer(controller)
+      println("----- Round " + counter +" Start -----")
+      println(controller.currentPlayer.name + "(" + controller.currentPlayer.number + "):")
       drawMap(controller)
       val coord:Coordinates = lineReaderCoordinates()
       setStone(coord, controller)
       lineReaderRotateField(controller)
       drawMap(controller)
-      println("----- Round End -----")
-      nextPlayer(controller)
+      counter+=1
+      controller.switchPlayer()
     }
-  }
-
-  def nextPlayer(controller:Controller): Unit = {
-    //ToDo activate method for next player
   }
 
   /**
@@ -36,12 +34,6 @@ class Textview {
     */
   def printList(args: TraversableOnce[_]): Unit = {
     args.foreach(print)
-  }
-
-  def drawPlayer(controller:Controller): Unit = {
-    //ToDo: Nach dem aktuellen Spieler fragen
-    val actualPlayer = "player 1"
-    println("The Round of Player " + actualPlayer)
   }
 
   /**
@@ -81,6 +73,8 @@ class Textview {
     for(x <- arr){
       if(x == "-1"){
         arr(arr.indexOf(x)) = "0 "
+      } else {
+        arr(arr.indexOf(x)) = x + ' '
       }
     }
 
@@ -93,8 +87,7 @@ class Textview {
     * @param controller to activate the function neccessary for this
     */
   def setStone(coordinates: Coordinates, controller:Controller): Unit  = {
-    //ToDO: Get actual player
-    controller.placeOrb(coordinates.getX, coordinates.getY,1)
+    controller.placeOrb(coordinates.getX, coordinates.getY,controller.currentPlayer.number)
   }
 
   def lineReaderRotateField(controller: Controller): Unit ={
@@ -139,6 +132,7 @@ class Textview {
 
     controller.players(0) = new Player(1,player1Name)
     controller.players(1) = new Player(2,player2Name)
+    controller.currentPlayer = controller.players(0)
 
     println("Have Fun!")
   }
@@ -155,7 +149,6 @@ class Textview {
     while (coord.getX < 0 || coord.getX >= 6) {
       val line = scala.io.StdIn.readLine()
       Try(coord.setX(line.toInt - 1)).getOrElse(coord.setX(-2))
-      println(line + " " + coord.getX)
       if (coord.getX < 0 || coord.getX >= 6) println("Please insert a correct number from 1 to 6! Try again: ")
     }
 
