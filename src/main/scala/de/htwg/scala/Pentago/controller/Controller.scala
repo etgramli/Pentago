@@ -9,10 +9,27 @@ import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 
 class Controller(var gameField: GameField, val players: Array[Player]) {
 
+  var currentPlayer = new Player(-1, "Dummy")
+
   def this(playerOneName: String, playerTwoName: String) {
     this(new GameField(), Array(new Player(0, playerOneName), new Player(1, playerTwoName)))
+    this.currentPlayer = players(0)
   }
 
+
+  def switchPlayer(): Unit = {
+    val currentPlayerIndex = players.indexOf(currentPlayer)
+    val nextPlayerIndex = (currentPlayerIndex + 1) % players.length
+    currentPlayer = players(nextPlayerIndex)
+  }
+
+  def getCurrentPlayer(): Player = {
+    currentPlayer
+  }
+
+  def getCurrentPlayerIndex(): Int = {
+    players.indexOf(currentPlayer)
+  }
 
   // 'l' links, 'r' rechts
   def rotate(tileNumber: Int, direction: Char): Unit = {

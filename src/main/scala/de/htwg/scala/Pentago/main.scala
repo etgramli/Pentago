@@ -4,8 +4,8 @@ import de.htwg.scala.Pentago.view.Textview
 object main extends App {
   override def main(args: Array[String]): Unit = {
 
-    val controller = new Controller("Spieler 1", "Spieler 2")
-    val view = new Textview()
-    view.play(controller)
+    val controller = new Controller("Player1", "Player2")
+    val textview = new Textview()
+    textview.play(controller)
   }
 }
