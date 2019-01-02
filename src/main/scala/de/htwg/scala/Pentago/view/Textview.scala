@@ -96,12 +96,14 @@ class Textview {
     if(answer == 'y'){
       print("Which one? (1,2,3,4 from top left to bottom right): ")
       var answer2 = scala.io.StdIn.readChar()
-      while(answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4'){
-        if(answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4'){
+      while(answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4') {
+        if (answer2 != '1' && answer2 != '2' && answer2 != '3' && answer2 != '4') {
           print("Please decide for 1 to 4: ")
           answer2 = scala.io.StdIn.readChar()
-        } else {
-          print("In which directio? (l, r): ")
+        }
+      }
+      if (answer2 == '1' || answer2 == '2' || answer2 == '3' || answer2 == '4'){
+          print("In which direction? (l, r): ")
           var answer3 = scala.io.StdIn.readChar()
           while(answer3 != 'l' && answer3 != 'r'){
             if(answer3 != 'l' && answer3 != 'r'){
@@ -112,7 +114,6 @@ class Textview {
             }
           }
         }
-      }
     } else if(answer != 'n'){
       println("Please insert y for yes or n for no")
     }
@@ -124,6 +125,7 @@ class Textview {
 
     println("Welcome to Pentago! Please insert playernames:")
     print("Player 1: ")
+
 
     player1Name = scala.io.StdIn.readLine()
 
