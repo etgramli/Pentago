@@ -10,6 +10,16 @@ class GameField(val tiles: Array[Array[Tile]]) {
     ))
   }
 
+  def getGameFiled(): Array[Array[Int]] = {
+    val gameFieldData = Array.ofDim[Int](size, size)
+    for (x <- 0 until size) {
+      for (y <- 0 until size) {
+        gameFieldData(x)(y) = orbAt(x, y)
+      }
+    }
+    gameFieldData
+  }
+
   def orbAt(xCoord: Int, yCoord: Int): Int = {
     assert(xCoord < size && yCoord < size)
     val xTileNumber = xCoord / 3

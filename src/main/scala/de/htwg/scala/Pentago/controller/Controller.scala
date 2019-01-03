@@ -50,13 +50,7 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   def getGameFiled(): Array[Array[Int]] = {
-    val gameFieldData = Array.ofDim[Int](gameField.size, gameField.size)
-    for (x <- 0 until gameField.size) {
-      for (y <- 0 until gameField.size) {
-        gameFieldData(x)(y) = gameField.orbAt(x, y)
-      }
-    }
-    gameFieldData
+    gameField.getGameFiled()
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
