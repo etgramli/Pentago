@@ -4,7 +4,7 @@ import de.htwg.scala.Pentago.model.GameField
 
 
 final case class TestGameFieldMessage(gf: GameField)
-final case class GameFieldWinners(playerNumbers: Set[Int])
+final case class GameFieldWinnersMessage(playerNumbers: Set[Int])
 
-final case class Line(line: Array[Int])
-final case class LineWinner(playerNumber: Int)
+final case class LineMessage(line: Array[Int], yStart: Int)
+final case class LineWinnerMessage(playerNumber: Int)
