@@ -36,8 +36,13 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     this.gameField = gameField.rotate(tileNumber, direction)
   }
 
-  def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Unit = {
-    this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
+  def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Boolean = {
+    if (gameField.orbAt(xCoord, yCoord) != -1) {
+      false
+    } else {
+      this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
+      true
+    }
   }
 
   def getAllTiles(): Array[Array[Tile]] = {

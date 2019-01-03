@@ -5,6 +5,16 @@ import Matchers._
 
 class GameFieldSpec extends FlatSpec {
 
+  "A GameField" should "only accept only one orb per position" in {
+    val gf = new GameField()
+
+    val placed = gf.placeOrb(2, 2, 0)
+    val placedAgain = placed.placeOrb(2,2,1)
+
+    placedAgain.orbAt(2, 2) should be(0)
+    placedAgain should equal(placed)
+  }
+
   "A GameFiled" should "rotate one Tile" in {
     val original = new GameField()
     val placed = original.placeOrb(0, 1, 2)

@@ -22,6 +22,9 @@ class GameField(val tiles: Array[Array[Tile]]) {
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): GameField = {
     assert(xCoord < size && yCoord < size)
+    if (orbAt(xCoord, yCoord) != -1)
+      return this   // Do not change anything if place already occupied
+
     val xTileNumber = xCoord / 3
     val yTileNumber = yCoord / 3
     val xTileCoord = xCoord % 3
