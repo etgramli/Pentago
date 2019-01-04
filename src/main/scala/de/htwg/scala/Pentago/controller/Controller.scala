@@ -1,10 +1,10 @@
 package de.htwg.scala.Pentago.controller
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 
 class Controller(var gameField: GameField, val players: Array[Player]) {
@@ -72,13 +72,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
         if (playerNumber != -1) {
           winners += playerNumber
         }
-      }
-    }
-    for (x <- 0 until 2) {
-      for (y <- 0 until 2) {
-        playerNumber = testDiagonalRow(x, y, gameField)
-        if (playerNumber != -1) {
-          winners += playerNumber
+        if (x < 2) {
+          playerNumber = testDiagonalRow(x, y, gameField)
+          if (playerNumber != -1) {
+            winners += playerNumber
+          }
         }
       }
     }
