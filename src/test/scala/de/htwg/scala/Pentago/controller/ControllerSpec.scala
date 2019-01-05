@@ -1,7 +1,7 @@
 package de.htwg.scala.Pentago.controller
 
+import org.scalatest.Matchers._
 import org.scalatest._
-import Matchers._
 
 class ControllerSpec extends FlatSpec {
 
@@ -15,14 +15,14 @@ class ControllerSpec extends FlatSpec {
   "Player 0" should "begin game" in {
     val controller = new Controller("Player 0", "Player 1")
 
-    controller.getCurrentPlayerIndex() should be(0)
+    controller.getCurrentPlayerIndex should be(0)
   }
 
   "Player 1" should "be second to place stone" in {
     val controller = new Controller("Player 0", "Player 1")
 
     controller.switchPlayer()
-    controller.getCurrentPlayerIndex() should be(1)
+    controller.getCurrentPlayerIndex should be(1)
   }
 
   "Player 0" should "be third to place stone" in {
@@ -30,7 +30,7 @@ class ControllerSpec extends FlatSpec {
 
     controller.switchPlayer()
     controller.switchPlayer()
-    controller.getCurrentPlayerIndex() should be(0)
+    controller.getCurrentPlayerIndex should be(0)
   }
 
 

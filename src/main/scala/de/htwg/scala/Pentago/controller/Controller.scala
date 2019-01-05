@@ -1,14 +1,19 @@
 package de.htwg.scala.Pentago.controller
 
+import akka.actor.ActorSystem
+import akka.pattern.ask
+import akka.util.Timeout
+import de.htwg.scala.Pentago.controller.actors.{GameFieldTestActor, TestGameFieldMessage}
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
 
 
 class Controller(var gameField: GameField, val players: Array[Player]) {
 
+  val actorSystem = ActorSystem("Controller-System")
+  implicit val timeout: Timeout = Timeout(5 second)
   var currentPlayer = new Player(-1, "Dummy")
 
   def this(playerOneName: String, playerTwoName: String) {
@@ -23,11 +28,11 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     currentPlayer = players(nextPlayerIndex)
   }
 
-  def getCurrentPlayer(): Player = {
+  def getCurrentPlayer: Player = {
     currentPlayer
   }
 
-  def getCurrentPlayerIndex(): Int = {
+  def getCurrentPlayerIndex: Int = {
     players.indexOf(currentPlayer)
   }
 
@@ -45,22 +50,24 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     }
   }
 
-  def getAllTiles(): Array[Array[Tile]] = {
+  def getAllTiles: Array[Array[Tile]] = {
     gameField.tiles.clone()
   }
 
-  def getGameFiled(): Array[Array[Int]] = {
+  def getGameFiled: Array[Array[Int]] = {
     gameField.getGameFiled()
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
   def testWin(): Set[Int] = {
-    val futureVertical = Future(testWin(gameField.rotateGameFieldLeft()))
-    val futureHorizontal = Future(testWin(gameField))
+    val actorVertical = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorVertical")
+    val actorHorizontal = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorHorizontal")
+    val futureVertical = actorVertical ? TestGameFieldMessage(gameField.rotateGameFieldLeft())
+    val futureHorizontal = actorHorizontal ? TestGameFieldMessage(gameField)
 
-    val winnersVertical = Await.result(futureVertical, 1 seconds)
-    val winnersHorizontal = Await.result(futureHorizontal, 1 seconds)
-    winnersHorizontal union winnersVertical
+    val winnersVertical = Await.result(futureVertical, 3 seconds)
+    val winnersHorizontal = Await.result(futureHorizontal, 3 seconds)
+    winnersHorizontal.asInstanceOf[Set[Int]] union winnersVertical.asInstanceOf[Set[Int]]
   }
 
   def testWin(gameField: GameField): Set[Int] = {

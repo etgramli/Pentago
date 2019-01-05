@@ -1,6 +1,6 @@
 package de.htwg.scala.Pentago.controller.actors
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.{Actor, Props}
 import akka.event.Logging
 import akka.pattern.ask
 import akka.util.Timeout
@@ -11,11 +11,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
-class GameFieldTestActor(parentActor: ActorRef) extends Actor {
+object GameFieldTestActor {
+  def props(): Props = Props(new GameFieldTestActor())
+}
+class GameFieldTestActor() extends Actor {
   val log = Logging(context.system, this)
   val lineTestActor = context.actorOf(LineTestActor.props(), "line")
   var winners = Set[Int]()
-  implicit val timeout: Timeout = Timeout(1 second)
+  implicit val timeout: Timeout = Timeout(4 second)
   implicit val ec: ExecutionContext = ExecutionContext.global
 
   var waitForFuturesList: List[Future[Any]] = List[Future[Any]]()
@@ -27,23 +30,21 @@ class GameFieldTestActor(parentActor: ActorRef) extends Actor {
       for (x <- 0 until gf.size) {
         val line = getHorizontalRow(gf, x)
         for (y <- 0 until 2) {
-          // ToDo: Create child actor to test line
-          lineTestActor ! LineMessage(line, y)
+          // Create child actor to test line
+          waitForFuturesList :+ lineTestActor ? LineMessage(line, y)
         }
       }
       for (x <- 0 until 2) {
         for (y <- 0 until 2) {
           val line = getDiagonalRow(gf, x, y)
-          // ToDo: Create child actor to tets line
-          lineTestActor ! LineMessage(line, y)
-          val future = lineTestActor ask LineMessage(line, y)
-          waitForFuturesList :+ future
+          // Create child actor to test line
+          waitForFuturesList :+ lineTestActor ? LineMessage(line, y)
         }
       }
-      // ToDo: Wait for all child actor messages to know who won
+      // Wait for all child actor messages to know who won
       val lineFutures = Future.sequence(waitForFuturesList)
       lineFutures.onComplete {
-        case Success(e) => parentActor ! GameFieldWinnersMessage(winners)
+        case Success(e) => sender() ! GameFieldWinnersMessage(winners)
         case Failure(e) => log.warning("Failed to process all lines: ")
       }
       // Send winners back to caller

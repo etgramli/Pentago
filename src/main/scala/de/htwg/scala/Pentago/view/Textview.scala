@@ -41,7 +41,7 @@ class Textview {
     * @param controller from which the array comes from
     */
   def drawMap(controller:Controller): Unit = {
-    val array = adjustArray(controller.getGameFiled())
+    val array = adjustArray(controller.getGameFiled)
     for(x <- array){
       printList(x)
       println()
