@@ -1,55 +1,57 @@
 package de.htwg.scala.Pentago.controller.actors
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import akka.event.Logging
-import akka.pattern.ask
 import akka.util.Timeout
 import de.htwg.scala.Pentago.model.GameField
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 
 object GameFieldTestActor {
   def props(): Props = Props(new GameFieldTestActor())
 }
-class GameFieldTestActor() extends Actor {
-  val log = Logging(context.system, this)
-  val lineTestActor = context.actorOf(LineTestActor.props(), "line")
-  var winners = Set[Int]()
+class GameFieldTestActor extends Actor {
   implicit val timeout: Timeout = Timeout(4 second)
   implicit val ec: ExecutionContext = ExecutionContext.global
 
+  val log = Logging(context.system, this)
+  val lineTestActor = context.actorOf(LineTestActor.props(), "line")
+  var winners = Set[Int]()
+
+  var resultReceiver: ActorRef = self
+  var number: Int = 0
   var waitForFuturesList: List[Future[Any]] = List[Future[Any]]()
 
   override def receive: PartialFunction[Any, Unit] = {
     case TestGameFieldMessage(gf) =>
+      number = 0
+      resultReceiver = sender()
       val waitForFuturesList = List[Future[Any]]()
       winners = Set[Int]()
       for (x <- 0 until gf.size) {
         val line = getHorizontalRow(gf, x)
         for (y <- 0 until 2) {
           // Create child actor to test line
-          waitForFuturesList :+ lineTestActor ? LineMessage(line, y)
+          lineTestActor ! LineMessage(line, y)
+          number += 1
         }
       }
       for (x <- 0 until 2) {
         for (y <- 0 until 2) {
           val line = getDiagonalRow(gf, x, y)
           // Create child actor to test line
-          waitForFuturesList :+ lineTestActor ? LineMessage(line, y)
+          lineTestActor ! LineMessage(line, y)
+          number += 1
         }
       }
-      // Wait for all child actor messages to know who won
-      val lineFutures = Future.sequence(waitForFuturesList)
-      lineFutures.onComplete {
-        case Success(e) => sender() ! GameFieldWinnersMessage(winners)
-        case Failure(e) => log.warning("Failed to process all lines: ")
-      }
-      // Send winners back to caller
     case LineWinnerMessage(playerNumber: Int) =>
-      winners += playerNumber
+      if (playerNumber != -1)
+        winners += playerNumber
+      number -= 1
+      if (number == 0)
+        resultReceiver ! GameFieldWinnersMessage(winners)
     case _ => log.warning("Received unknown message")
   }
 

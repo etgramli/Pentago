@@ -74,6 +74,7 @@ class ControllerSpec extends FlatSpec {
       controller.placeOrb(x, 2, 0)
       controller.placeOrb(x, 1, 1)
     }
-    controller.testWin() should have size 0
+    controller.testWin() should not contain 0
+    controller.testWin() should not contain 1
   }
 }

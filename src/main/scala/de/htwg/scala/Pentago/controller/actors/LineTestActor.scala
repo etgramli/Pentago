@@ -19,6 +19,7 @@ class LineTestActor extends Actor {
           sender() ! LineWinnerMessage(-1)        // Send message back
         }
       }
+      sender() ! LineWinnerMessage(playerNumber)  // Send message back
     case _ => log.warning("Received unknown message")
   }
 }
