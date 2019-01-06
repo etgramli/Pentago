@@ -11,12 +11,12 @@ class LineTestActor extends Actor {
 
   override def receive: PartialFunction[Any, Unit] = {
     case LineMessage(line, beginIndex) =>
-      val playerNumber = line(beginIndex)
-      if (playerNumber == -1)
-        sender() ! LineWinnerMessage(playerNumber) // Send message back
-      for (y <- beginIndex until beginIndex + 5) {
-        if (beginIndex + y >= line.length || playerNumber != line(beginIndex + y)) {
-          sender() ! LineWinnerMessage(-1)        // Send message back
+      var playerNumber = line(beginIndex)
+      if (playerNumber != -1 && line.length - beginIndex >= 5) {
+        for (y <- beginIndex until line.length) {
+          if (playerNumber != line(y)) {
+            playerNumber = -1
+          }
         }
       }
       sender() ! LineWinnerMessage(playerNumber)  // Send message back

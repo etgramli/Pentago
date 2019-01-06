@@ -1,34 +1,35 @@
 package de.htwg.scala.Pentago.controller.actors
 
+import java.util.UUID
+
 import akka.actor.{Actor, ActorRef, Props}
 import akka.event.Logging
 import akka.util.Timeout
 import de.htwg.scala.Pentago.model.GameField
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future}
 
 
 object GameFieldTestActor {
   def props(): Props = Props(new GameFieldTestActor())
 }
 class GameFieldTestActor extends Actor {
-  implicit val timeout: Timeout = Timeout(4 second)
+  implicit val timeout: Timeout = Timeout(1 second)
   implicit val ec: ExecutionContext = ExecutionContext.global
 
   val log = Logging(context.system, this)
-  val lineTestActor = context.actorOf(LineTestActor.props(), "line")
+  val lineTestActor = context.actorOf(LineTestActor.props(), "line-"+UUID.randomUUID())
   var winners = Set[Int]()
 
   var resultReceiver: ActorRef = self
   var number: Int = 0
-  var waitForFuturesList: List[Future[Any]] = List[Future[Any]]()
 
   override def receive: PartialFunction[Any, Unit] = {
     case TestGameFieldMessage(gf) =>
       number = 0
       resultReceiver = sender()
-      val waitForFuturesList = List[Future[Any]]()
+
       winners = Set[Int]()
       for (x <- 0 until gf.size) {
         val line = getHorizontalRow(gf, x)

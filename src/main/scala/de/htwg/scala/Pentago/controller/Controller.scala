@@ -15,7 +15,7 @@ import scala.concurrent.duration._
 class Controller(var gameField: GameField, val players: Array[Player]) {
 
   val actorSystem = ActorSystem("Controller-System")
-  implicit val timeout: Timeout = Timeout(5 second)
+  implicit val timeout: Timeout = Timeout(1 second)
   var currentPlayer = new Player(-1, "Dummy")
 
   def this(playerOneName: String, playerTwoName: String) {
@@ -57,18 +57,19 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   }
 
   def getGameFiled: Array[Array[Int]] = {
-    gameField.getGameFiled()
+    gameField.getGameFiled
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
   def testWin(): Set[Int] = {
     val actorVertical = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorVertical"+UUID.randomUUID())
     val actorHorizontal = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorHorizontal"+UUID.randomUUID())
-    val futureVertical = actorVertical ? TestGameFieldMessage(gameField.rotateGameFieldLeft())
     val futureHorizontal = actorHorizontal ? TestGameFieldMessage(gameField)
+    val rotated = gameField.rotateGameFieldLeft()
+    val futureVertical = actorVertical ? TestGameFieldMessage(rotated)
 
-    val winnersVertical = Await.result(futureVertical, 3 seconds)
-    val winnersHorizontal = Await.result(futureHorizontal, 3 seconds)
+    val winnersVertical = Await.result(futureVertical, 1 seconds)
+    val winnersHorizontal = Await.result(futureHorizontal, 1 seconds)
     val winnersVerticalSet = winnersVertical.asInstanceOf[GameFieldWinnersMessage].playerNumbers
     val winnersHorizontalSet = winnersHorizontal.asInstanceOf[GameFieldWinnersMessage].playerNumbers
 

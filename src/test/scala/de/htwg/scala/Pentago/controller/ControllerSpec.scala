@@ -77,4 +77,5 @@ class ControllerSpec extends FlatSpec {
     controller.testWin() should not contain 0
     controller.testWin() should not contain 1
   }
+
 }

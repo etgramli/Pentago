@@ -10,7 +10,7 @@ class GameField(val tiles: Array[Array[Tile]]) {
     ))
   }
 
-  def getGameFiled(): Array[Array[Int]] = {
+  def getGameFiled: Array[Array[Int]] = {
     val gameFieldData = Array.ofDim[Int](size, size)
     for (x <- 0 until size) {
       for (y <- 0 until size) {
