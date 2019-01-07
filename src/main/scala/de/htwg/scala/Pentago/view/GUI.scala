@@ -13,6 +13,7 @@ import scala.swing.event.ButtonClicked
 class GUI(controller: Controller) extends MainFrame{
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
+  var counter = 0
   drawMap()
   popupNames()
   addReactions()
@@ -24,6 +25,8 @@ class GUI(controller: Controller) extends MainFrame{
     if(name1.isDefined) controller.players(0) = new Player(1,name1.get)
     if(name2.isDefined) controller.players(1) = new Player(2,name2.get)
     controller.currentPlayer = controller.players(0)
+
+    repaint()
   }
 
   def popupRotation() : Unit = {
@@ -41,6 +44,8 @@ class GUI(controller: Controller) extends MainFrame{
     }
 
     controller.switchPlayer()
+    counter += 1
+    repaint()
   }
 
   def showOptions[A <: Enumeration](
@@ -76,13 +81,14 @@ class GUI(controller: Controller) extends MainFrame{
   //----------- Draw Map -------------//
 
   def drawPlayer : BoxPanel = new BoxPanel(Orientation.Horizontal){
+    println("hi")
     contents += drawPlayerLabel(controller.players(0).name, "playerX")
     contents += new Label ("vs")
     contents += drawPlayerLabel(controller.players(1).name, "playerY")
   }
 
   def drawRound : BoxPanel = new BoxPanel(Orientation.Horizontal){
-    contents += drawPlayerLabel("Round X", "round")
+    contents += drawPlayerLabel("Round " + counter, "round")
     contents += new Label ("----")
     contents += drawPlayerLabel(controller.currentPlayer.name, "actualPlayer")
   }
