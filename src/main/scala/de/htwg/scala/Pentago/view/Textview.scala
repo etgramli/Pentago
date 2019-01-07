@@ -21,7 +21,6 @@ class Textview {
       drawMap(controller)
       lineReaderCoordinates(controller)
       lineReaderRotateField(controller)
-      drawMap(controller)
       counter+=1
       controller.switchPlayer()
     }
@@ -80,6 +79,9 @@ class Textview {
     Array[String]("| ") ++ arr.take(3) ++ Array[String]("| ") ++ arr.drop(3) ++ Array[String]("|")
   }
 
+  /**
+    * Linereader to read if a field shall be rotated
+    */
   def lineReaderRotateField(controller: Controller): Unit ={
     print("Do you want to rotate on of the four fields? (y,n): ")
     val answer = scala.io.StdIn.readChar()
@@ -109,6 +111,9 @@ class Textview {
     }
   }
 
+  /**
+    * Linereader to read the playernames
+    */
   def lineReaderHello(controller:Controller): Unit = {
     var player1Name = "player 1"
     var player2Name = "player 2"
