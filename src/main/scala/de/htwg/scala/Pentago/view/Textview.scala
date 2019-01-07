@@ -98,13 +98,10 @@ class Textview {
           print("In which direction? (l, r): ")
           var answer3 = scala.io.StdIn.readChar()
           while(answer3 != 'l' && answer3 != 'r'){
-            if(answer3 != 'l' && answer3 != 'r'){
-              print("Please insert l for left and r for right: ")
-              answer3 = scala.io.StdIn.readChar()
-            } else {
-              controller.rotate(answer2.toInt - 1, answer3)
-            }
+            print("Please insert l for left and r for right: ")
+            answer3 = scala.io.StdIn.readChar()
           }
+          controller.rotate(answer2.toInt - '1', answer3)
         }
     } else if(answer != 'n'){
       println("Please insert y for yes or n for no")
