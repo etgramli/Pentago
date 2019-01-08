@@ -19,10 +19,8 @@ class Textview {
       println("----- Round " + counter +" Start -----")
       println(controller.currentPlayer.name + "(" + controller.currentPlayer.number + "):")
       drawMap(controller)
-      val coord:Coordinates = lineReaderCoordinates()
-      setStone(coord, controller)
+      lineReaderCoordinates(controller)
       lineReaderRotateField(controller)
-      drawMap(controller)
       counter+=1
       controller.switchPlayer()
     }
@@ -82,14 +80,8 @@ class Textview {
   }
 
   /**
-    * Method to set a stone in the textview
-    * @param coordinates to set the stone
-    * @param controller to activate the function neccessary for this
+    * Linereader to read if a field shall be rotated
     */
-  def setStone(coordinates: Coordinates, controller:Controller): Unit  = {
-    controller.placeOrb(coordinates.getX, coordinates.getY,controller.currentPlayer.number)
-  }
-
   def lineReaderRotateField(controller: Controller): Unit ={
     print("Do you want to rotate on of the four fields? (y,n): ")
     val answer = scala.io.StdIn.readChar()
@@ -106,19 +98,19 @@ class Textview {
           print("In which direction? (l, r): ")
           var answer3 = scala.io.StdIn.readChar()
           while(answer3 != 'l' && answer3 != 'r'){
-            if(answer3 != 'l' && answer3 != 'r'){
-              print("Please insert l for left and r for right: ")
-              answer3 = scala.io.StdIn.readChar()
-            } else {
-              controller.rotate(answer2.toInt - 1, answer3)
-            }
+            print("Please insert l for left and r for right: ")
+            answer3 = scala.io.StdIn.readChar()
           }
+          controller.rotate(answer2.toInt - '1', answer3)
         }
     } else if(answer != 'n'){
       println("Please insert y for yes or n for no")
     }
   }
 
+  /**
+    * Linereader to read the playernames
+    */
   def lineReaderHello(controller:Controller): Unit = {
     var player1Name = "player 1"
     var player2Name = "player 2"
@@ -143,7 +135,7 @@ class Textview {
     * Linereader to read the coordinates
     * @return the coordinates
     */
-  def lineReaderCoordinates():Coordinates = {
+  def lineReaderCoordinates(controller: Controller):Unit = {
 
     val coord: Coordinates = new Coordinates
 
@@ -161,7 +153,12 @@ class Textview {
       if (coord.getY < 0 || coord.getY >= 6) println("Please insert a correct number from 1 to 6! Try again: ")
     }
 
-    coord
+    if (!controller.placeOrb(coord.getX, coord.getY,controller.currentPlayer.number)){
+      println("This Place is already occupied, please choose another one")
+      coord.setX(-2)
+      coord.setY(-2)
+      lineReaderCoordinates(controller)
+    }
   }
 }
 
