@@ -1,9 +1,21 @@
 package de.htwg.scala.Pentago.controller
 
+import org.scalatest.Matchers._
 import org.scalatest._
-import Matchers._
 
 class ControllerSpec extends FlatSpec {
+
+
+  "GameField" should "rotate upper left tile left" in {
+    val controller = new Controller("P0", "P1")
+
+    val placed = controller.placeOrb(0, 1, 2)
+    placed should be (true)
+    controller.rotate(0, 'r')
+
+    val placedTwice = controller.placeOrb(1, 2, 2)
+    placedTwice should be(false)
+  }
 
   "Player 0" should "not be able to place orb twice" in {
     val controller = new Controller("P0", "P1")
