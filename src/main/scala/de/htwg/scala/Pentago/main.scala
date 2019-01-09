@@ -8,6 +8,7 @@ object main extends App {
     val textview = new Textview()
     val gui = new GUI(controller)
     gui.visible = true
+    gui.play()
     //textview.play(controller)
 
     println("End of Programm")

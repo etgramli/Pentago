@@ -14,9 +14,12 @@ class GUI(controller: Controller) extends MainFrame{
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
   var counter = 0
-  drawMap()
-  popupNames()
-  addReactions()
+
+  def play() : Unit = {
+      drawMap()
+      popupNames()
+      addReactions()
+  }
 
   def popupNames() : Unit ={
     val name1 = Dialog.showInput(contents.head, "Choose the Name of Player 1", "Header", Dialog.Message.Question, null, Nil, "")
