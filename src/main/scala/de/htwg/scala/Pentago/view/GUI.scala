@@ -1,16 +1,17 @@
 package de.htwg.scala.Pentago.view
 
-import java.awt.{Choice, Color}
+import java.awt.Color
 
 import de.htwg.scala.Pentago.controller.Controller
 import de.htwg.scala.Pentago.model.Player
-import javax.swing.{Icon, ImageIcon, JOptionPane, UIManager}
+import de.htwg.scala.Pentago.view.observer.Observer
+import javax.swing.{Icon, JOptionPane, UIManager}
 
 import scala.swing.Swing.EmptyIcon
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-class GUI(controller: Controller) extends MainFrame{
+class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
   var counter = 0
@@ -149,6 +150,9 @@ class GUI(controller: Controller) extends MainFrame{
     }
   }
 
+  override def receiveUpdate(): Unit = {
+    // ToDo: Update game field view
+  }
 }
 
 

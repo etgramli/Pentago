@@ -9,8 +9,12 @@ object Main extends App {
   override def main(args: Array[String]): Unit = {
 
     val controller = new Controller("Player1", "Player2")
-    val textview = new Textview()
+
+    val textview = new Textview(controller)
+    controller.addObserver(textview)
+
     val gui = new GUI(controller)
+    controller.addObserver(gui)
     gui.visible = true
     gui.play()
     //textview.play(controller)

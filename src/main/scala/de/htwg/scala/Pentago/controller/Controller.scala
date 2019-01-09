@@ -7,12 +7,13 @@ import akka.pattern.ask
 import akka.util.Timeout
 import de.htwg.scala.Pentago.controller.actors.{GameFieldTestActor, GameFieldWinnersMessage, TestGameFieldMessage}
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
+import de.htwg.scala.Pentago.view.observer.Subject
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
 
-class Controller(var gameField: GameField, val players: Array[Player]) {
+class Controller(var gameField: GameField, val players: Array[Player]) extends Subject[Controller] {
 
   val actorSystem = ActorSystem("Controller-System")
   implicit val timeout: Timeout = Timeout(1 second)
@@ -28,6 +29,8 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     val currentPlayerIndex = players.indexOf(currentPlayer)
     val nextPlayerIndex = (currentPlayerIndex + 1) % players.length
     currentPlayer = players(nextPlayerIndex)
+
+    notifyObservers()
   }
 
   def getCurrentPlayer: Player = {
@@ -41,6 +44,8 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
   // 'l' links, 'r' rechts
   def rotate(tileNumber: Int, direction: Char): Unit = {
     this.gameField = gameField.rotate(tileNumber, direction)
+
+    notifyObservers()
   }
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Boolean = {
@@ -48,6 +53,7 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
       false
     } else {
       this.gameField = gameField.placeOrb(xCoord, yCoord, playerNumber)
+      notifyObservers()
       true
     }
   }

@@ -2,10 +2,11 @@ package de.htwg.scala.Pentago.view
 
 import de.htwg.scala.Pentago.controller.Controller
 import de.htwg.scala.Pentago.model.Player
+import de.htwg.scala.Pentago.view.observer.Observer
 
 import scala.util.Try
 
-class Textview {
+class Textview(controller: Controller) extends Observer[Controller] {
 
   var counter = 1
 
@@ -159,6 +160,10 @@ class Textview {
       coord.setY(-2)
       lineReaderCoordinates(controller)
     }
+  }
+
+  override def receiveUpdate(): Unit = {
+    drawMap(controller)
   }
 }
 
