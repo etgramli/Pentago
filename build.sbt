@@ -2,7 +2,7 @@ name := "Pentago"
 
 version := "0.1"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.10"
 
 // add dependencies on standard Scala modules, in a way
 // supporting cross-version publishing
