@@ -10,6 +10,16 @@ class GameField(val tiles: Array[Array[Tile]]) {
     ))
   }
 
+  def getGameFiled: Array[Array[Int]] = {
+    val gameFieldData = Array.ofDim[Int](size, size)
+    for (x <- 0 until size) {
+      for (y <- 0 until size) {
+        gameFieldData(x)(y) = orbAt(x, y)
+      }
+    }
+    gameFieldData
+  }
+
   def orbAt(xCoord: Int, yCoord: Int): Int = {
     assert(xCoord < size && yCoord < size)
     val xTileNumber = xCoord / 3
@@ -22,6 +32,9 @@ class GameField(val tiles: Array[Array[Tile]]) {
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): GameField = {
     assert(xCoord < size && yCoord < size)
+    if (orbAt(xCoord, yCoord) != -1)
+      return this   // Do not change anything if place already occupied
+
     val xTileNumber = xCoord / 3
     val yTileNumber = yCoord / 3
     val xTileCoord = xCoord % 3

@@ -1,9 +1,28 @@
 package de.htwg.scala.Pentago.model
 
+import org.scalatest.Matchers._
 import org.scalatest._
-import Matchers._
 
 class GameFieldSpec extends FlatSpec {
+
+  "GameField" should "rotate upper left tile left" in {
+    val gf = new GameField()
+
+    val placed = gf.placeOrb(0, 1, 2)
+    val rotated = placed.rotate(0, 'r')
+
+    rotated.orbAt(1,2) should be(2)
+  }
+
+  "A GameField" should "only accept only one orb per position" in {
+    val gf = new GameField()
+
+    val placed = gf.placeOrb(2, 2, 0)
+    val placedAgain = placed.placeOrb(2,2,1)
+
+    placedAgain.orbAt(2, 2) should be(0)
+    placedAgain should equal(placed)
+  }
 
   "A GameFiled" should "rotate one Tile" in {
     val original = new GameField()
