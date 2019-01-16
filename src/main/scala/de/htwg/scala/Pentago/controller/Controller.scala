@@ -52,6 +52,10 @@ class Controller(var gameField: GameField, val players: Array[Player]) {
     }
   }
 
+  def orbAt(xCoord: Int, yCoord: Int) : Int = {
+    gameField.orbAt(xCoord, yCoord)
+  }
+
   def getAllTiles: Array[Array[Tile]] = {
     gameField.tiles.clone()
   }

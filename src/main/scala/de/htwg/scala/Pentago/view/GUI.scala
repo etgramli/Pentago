@@ -14,11 +14,27 @@ class GUI(controller: Controller) extends MainFrame{
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
   var counter = 0
+  val noWin = true
 
   def play() : Unit = {
-      drawMap()
-      popupNames()
-      addReactions()
+        drawMap()
+        popupNames()
+        addReactions()
+  }
+
+  def testWin() : Unit = {
+    val set = controller.testWin()
+    if(set.size > 1){
+      System.out.println(set(0) + " " + set(1))
+      popupWinner("Unentschieden!")
+    } else if(set.size == 1) {
+      System.out.println(set(0))
+      popupWinner("Der Gewinner ist: " + controller.currentPlayer.name)
+    }
+  }
+
+  def popupWinner(message:String) : Unit = {
+    Dialog.showMessage(contents.head, message, "Winner:")
   }
 
   def popupNames() : Unit ={
@@ -29,7 +45,7 @@ class GUI(controller: Controller) extends MainFrame{
     if(name2.isDefined) controller.players(1) = new Player(2,name2.get)
     controller.currentPlayer = controller.players(0)
 
-    repaint()
+    drawMap()
   }
 
   def popupRotation() : Unit = {
@@ -48,7 +64,10 @@ class GUI(controller: Controller) extends MainFrame{
 
     controller.switchPlayer()
     counter += 1
-    repaint()
+
+    if(noWin) {
+      drawMap()
+    }
   }
 
   def showOptions[A <: Enumeration](
@@ -71,20 +90,27 @@ class GUI(controller: Controller) extends MainFrame{
   def addReactions() : Unit = {
     reactions += {
       case ButtonClicked(b) =>
-        if(controller.currentPlayer.number == 1) {
-          b.background = Color.magenta
-        } else if(controller.currentPlayer.number == 2){
-          b.background = Color.blue
+        if(noWin) {
+          if (controller.currentPlayer.number == 1) {
+            b.background = Color.magenta
+          } else if (controller.currentPlayer.number == 2) {
+            b.background = Color.blue
+          }
+          val coords = b.name.split(";")
+          controller.placeOrb(coords(0).toInt, coords(1).toInt, controller.currentPlayer.number)
+          testWin()
+          if(noWin) {
+            popupRotation()
+            testWin()
+          }
+          b.enabled = false
         }
-        popupRotation()
-        b.enabled = false
     }
   }
 
   //----------- Draw Map -------------//
 
   def drawPlayer : BoxPanel = new BoxPanel(Orientation.Horizontal){
-    println("hi")
     contents += drawPlayerLabel(controller.players(0).name, "playerX")
     contents += new Label ("vs")
     contents += drawPlayerLabel(controller.players(1).name, "playerY")
@@ -104,37 +130,27 @@ class GUI(controller: Controller) extends MainFrame{
   }
 
   def drawInternMap : BoxPanel = new BoxPanel(Orientation.Vertical){
-    contents += new BoxPanel(Orientation.Horizontal){
-      contents += drawOneField
-      contents += drawOneField
-    }
-    contents += new BoxPanel(Orientation.Horizontal){
-      contents += drawOneField
-      contents += drawOneField
+    for(x <- 0 until 6){
+      contents += drawLine(x)
     }
   }
 
-  def drawOneField : BoxPanel = new BoxPanel(Orientation.Vertical){
-    contents += new BoxPanel(Orientation.Horizontal){
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
-    }
-    contents += new BoxPanel(Orientation.Horizontal){
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
-    }
-    contents += new BoxPanel(Orientation.Horizontal){
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
-      contents += drawSingleDot(name:String)
+  def drawLine(id:Int) : BoxPanel =  new BoxPanel(Orientation.Horizontal){
+    for(x <- 0 until 6) {
+      contents += drawSingleDot(id.toString + ";" + x.toString)
     }
   }
 
-  def drawSingleDot(name:String) : Button = {
-    val button = new Button(name){
+  def drawSingleDot(id:String) : Button = {
+    val coords = id.split(";")
+    val button = new Button(){
       maximumSize = new Dimension(Short.MaxValue, Short.MaxValue)
+      name = id
+      if(controller.orbAt(coords(0).toInt, coords(1).toInt) == 1){
+          background = Color.magenta
+      } else if(controller.orbAt(coords(0).toInt, coords(1).toInt) == 2){
+        background = Color.blue
+      }
     }
 
     listenTo(button)
