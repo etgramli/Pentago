@@ -15,7 +15,7 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
   var counter = 0
-  val noWin = true
+  var noWin = true
 
   def play() : Unit = {
         drawMap()
@@ -26,10 +26,10 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
   def testWin() : Unit = {
     val set = controller.testWin()
     if(set.size > 1){
-      System.out.println(set(0) + " " + set(1))
+      noWin = false
       popupWinner("Unentschieden!")
     } else if(set.size == 1) {
-      System.out.println(set(0))
+      noWin = false
       popupWinner("Der Gewinner ist: " + controller.currentPlayer.name)
     }
   }
@@ -92,19 +92,21 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
     reactions += {
       case ButtonClicked(b) =>
         if(noWin) {
-          if (controller.currentPlayer.number == 1) {
-            b.background = Color.magenta
-          } else if (controller.currentPlayer.number == 2) {
-            b.background = Color.blue
-          }
           val coords = b.name.split(";")
-          controller.placeOrb(coords(0).toInt, coords(1).toInt, controller.currentPlayer.number)
-          testWin()
-          if(noWin) {
-            popupRotation()
+          if (controller.orbAt(coords(0).toInt, coords(1).toInt) == -1){
+            if (controller.currentPlayer.number == 1) {
+              b.background = Color.magenta
+            } else if (controller.currentPlayer.number == 2) {
+              b.background = Color.blue
+            }
+            controller.placeOrb(coords(0).toInt, coords(1).toInt, controller.currentPlayer.number)
             testWin()
+            if (noWin) {
+              popupRotation()
+              testWin()
+            }
+            b.enabled = false
           }
-          b.enabled = false
         }
     }
   }

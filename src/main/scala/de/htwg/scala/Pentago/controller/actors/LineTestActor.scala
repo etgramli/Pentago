@@ -13,7 +13,7 @@ class LineTestActor extends Actor {
     case LineMessage(line, beginIndex) =>
       var playerNumber = line(beginIndex)
       if (playerNumber != -1 && line.length - beginIndex >= 5) {
-        for (y <- beginIndex until beginIndex+4) {
+        for (y <- beginIndex until beginIndex+5) {
           if (y >= line.length || playerNumber != line(y)) {
             playerNumber = -1
           }
