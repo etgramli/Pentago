@@ -1,5 +1,6 @@
 package de.htwg.scala.Pentago.controller
 
+import de.htwg.scala.Pentago.model.GameField
 import org.scalatest.Matchers._
 import org.scalatest._
 
@@ -90,4 +91,21 @@ class ControllerSpec extends FlatSpec {
     controller.testWin() should not contain 1
   }
 
+  "A Controller" should "return same GameField data" in {
+    val controller = new Controller("1", "2")
+
+    val gf_0 = new GameField(controller.getGameFiled)
+    val gf_1 = new GameField(controller.getAllTiles)
+
+    controller.gameField should equal(gf_0)
+    controller.gameField should equal(gf_1)
+  }
+
+  "An orb" should "be where orb set" in {
+    val controller = new Controller("1", "2")
+
+    controller.placeOrb(1,2,1)
+
+    controller.orbAt(1,2) should be(1)
+  }
 }
