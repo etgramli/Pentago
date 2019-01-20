@@ -60,4 +60,11 @@ class GameFieldSpec extends FlatSpec {
     val rotated = original.rotateGameFieldLeft()
     rotated should be(expected)
   }
+
+  "A GameField" should "be the same after converting to Array" in {
+    val original = new GameField()
+    val copy = new GameField(original.getGameFiled)
+
+    copy should equal(original)
+  }
 }

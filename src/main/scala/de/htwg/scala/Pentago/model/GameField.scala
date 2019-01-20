@@ -10,6 +10,15 @@ class GameField(val tiles: Array[Array[Tile]]) {
     ))
   }
 
+  def this(gfArray: Array[Array[Int]]) {
+    this()
+    for (x <- 0 until size) {
+      for (y <- 0 until size) {
+        this.placeOrb(x,y,gfArray(x)(y))
+      }
+    }
+  }
+
   def getGameFiled: Array[Array[Int]] = {
     val gameFieldData = Array.ofDim[Int](size, size)
     for (x <- 0 until size) {

@@ -47,6 +47,9 @@ class Tile (val userOccupation: Array[Array[Int]]) {
     right = right % 4
     if (left > right) {
       // Return left - right 'l's
+      if (left - right == 3) {
+        return "r"
+      }
       val buf = new StringBuilder()
       while (left > right) {
         buf.append('l')
@@ -55,6 +58,8 @@ class Tile (val userOccupation: Array[Array[Int]]) {
       buf.toString()
     } else if (right > left) {
       // Return right - left 'r's
+      if (right - left == 3)
+        return "l"
       val buf = new StringBuilder()
       while (right > left) {
         buf.append('r')
