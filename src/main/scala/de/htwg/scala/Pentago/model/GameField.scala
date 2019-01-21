@@ -1,6 +1,7 @@
 package de.htwg.scala.Pentago.model
 
-class GameField(val tiles: Array[Array[Tile]]) {
+
+class GameField(val tiles: Array[Array[Tile]]){
   val size = 6
 
   def this() {

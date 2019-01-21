@@ -1,14 +1,19 @@
 package de.htwg.scala.Pentago.view
 
-import de.htwg.scala.Pentago.controller.Controller
+import com.google.inject.Inject
+import de.htwg.scala.Pentago.controller.{Controller, ControllerInterface}
 import de.htwg.scala.Pentago.model.Player
 import de.htwg.scala.Pentago.view.observer.Observer
 
 import scala.util.Try
 
-class Textview(controller: Controller) extends Observer[Controller] {
+class Textview @Inject() (controller: ControllerInterface) extends Observer[ControllerInterface] {
 
   var counter = 1
+
+  def getController : ControllerInterface = {
+    controller
+  }
 
   /**
     * The "main" function to let the textview run
@@ -39,7 +44,7 @@ class Textview(controller: Controller) extends Observer[Controller] {
     * Draws the map
     * @param controller from which the array comes from
     */
-  def drawMap(controller:Controller): Unit = {
+  def drawMap(controller:ControllerInterface): Unit = {
     val array = adjustArray(controller.getGameFiled)
     for(x <- array){
       printList(x)

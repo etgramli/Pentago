@@ -2,7 +2,8 @@ package de.htwg.scala.Pentago.view
 
 import java.awt.Color
 
-import de.htwg.scala.Pentago.controller.Controller
+import com.google.inject.Inject
+import de.htwg.scala.Pentago.controller.{Controller, ControllerInterface}
 import de.htwg.scala.Pentago.model.Player
 import de.htwg.scala.Pentago.view.observer.Observer
 import javax.swing.{Icon, JOptionPane, UIManager}
@@ -11,17 +12,17 @@ import scala.swing.Swing.EmptyIcon
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
+class GUI @Inject() (controller: ControllerInterface) extends MainFrame with Observer[ControllerInterface] {
   title = "Pentago"
   preferredSize = new Dimension(400, 400)
   var counter = 0
   var noWin = true
 
-  def play() : Unit = {
-        drawMap()
-        popupNames()
-        addReactions()
-  }
+  this.visible = true
+
+  drawMap()
+  popupNames()
+  addReactions()
 
   def testWin() : Unit = {
     val set = controller.testWin()
@@ -30,7 +31,7 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
       popupWinner("Unentschieden!")
     } else if(set.size == 1) {
       noWin = false
-      popupWinner("Der Gewinner ist: " + controller.currentPlayer.name)
+      popupWinner("Der Gewinner ist: " + controller.getCurrentPlayer.name)
     }
   }
 
@@ -42,9 +43,8 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
     val name1 = Dialog.showInput(contents.head, "Choose the Name of Player 1", "Header", Dialog.Message.Question, null, Nil, "")
     val name2 = Dialog.showInput(contents.head, "Choose the Name of Player 2", "Header", Dialog.Message.Question, null, Nil, "")
 
-    if(name1.isDefined) controller.players(0) = new Player(1,name1.get)
-    if(name2.isDefined) controller.players(1) = new Player(2,name2.get)
-    controller.currentPlayer = controller.players(0)
+    if(name1.isDefined) controller.getPlayers(0) = new Player(1,name1.get)
+    if(name2.isDefined) controller.getPlayers(1) = new Player(2,name2.get)
 
     drawMap()
   }
@@ -94,12 +94,12 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
         if(noWin) {
           val coords = b.name.split(";")
           if (controller.orbAt(coords(0).toInt, coords(1).toInt) == -1){
-            if (controller.currentPlayer.number == 1) {
+            if (controller.getCurrentPlayer.number == 1) {
               b.background = Color.magenta
-            } else if (controller.currentPlayer.number == 2) {
+            } else if (controller.getCurrentPlayer.number == 2) {
               b.background = Color.blue
             }
-            controller.placeOrb(coords(0).toInt, coords(1).toInt, controller.currentPlayer.number)
+            controller.placeOrb(coords(0).toInt, coords(1).toInt, controller.getCurrentPlayer.number)
             testWin()
             if (noWin) {
               popupRotation()
@@ -114,15 +114,15 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
   //----------- Draw Map -------------//
 
   def drawPlayer : BoxPanel = new BoxPanel(Orientation.Horizontal){
-    contents += drawPlayerLabel(controller.players(0).name, "playerX")
+    contents += drawPlayerLabel(controller.getPlayers(0).name, "playerX")
     contents += new Label ("vs")
-    contents += drawPlayerLabel(controller.players(1).name, "playerY")
+    contents += drawPlayerLabel(controller.getPlayers(1).name, "playerY")
   }
 
   def drawRound : BoxPanel = new BoxPanel(Orientation.Horizontal){
     contents += drawPlayerLabel("Round " + counter, "round")
     contents += new Label ("----")
-    contents += drawPlayerLabel(controller.currentPlayer.name, "actualPlayer")
+    contents += drawPlayerLabel(controller.getCurrentPlayer.name, "actualPlayer")
   }
 
   def drawPlayerLabel(name:String, id:String) : Label = {
@@ -169,7 +169,7 @@ class GUI(controller: Controller) extends MainFrame with Observer[Controller] {
   }
 
   override def receiveUpdate(): Unit = {
-    // ToDo: Update game field view
+    drawMap()
   }
 }
 

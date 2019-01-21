@@ -5,6 +5,7 @@ import java.util.UUID
 import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
+import com.google.inject.{Inject,Singleton}
 import de.htwg.scala.Pentago.controller.actors.{GameFieldTestActor, GameFieldWinnersMessage, TestGameFieldMessage}
 import de.htwg.scala.Pentago.model.{GameField, Player, Tile}
 import de.htwg.scala.Pentago.view.observer.Subject
@@ -12,20 +13,34 @@ import de.htwg.scala.Pentago.view.observer.Subject
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+trait ControllerInterface extends Subject[ControllerInterface] {
+  def switchPlayer()
+  def getCurrentPlayer: Player
+  def getCurrentPlayerIndex: Int
+  def rotate(tileNumber: Int, direction: Char)
+  def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Boolean
+  def orbAt(xCoord: Int, yCoord: Int) : Int
+  def getAllTiles: Array[Array[Tile]]
+  def getGameFiled: Array[Array[Int]]
+  def testWin(): Set[Int]
+  def getPlayers: Array[Player]
+}
 
-class Controller(var gameField: GameField, val players: Array[Player]) extends Subject[Controller] {
+@Singleton
+class Controller (var gameField: GameField, val players: Array[Player]) extends ControllerInterface {
 
   val actorSystem = ActorSystem("Controller-System")
   implicit val timeout: Timeout = Timeout(1 second)
   var currentPlayer = new Player(-1, "Dummy")
 
+  @Inject()
   def this(playerOneName: String, playerTwoName: String) {
     this(new GameField(), Array(new Player(0, playerOneName), new Player(1, playerTwoName)))
     this.currentPlayer = players(0)
   }
 
 
-  def switchPlayer(): Unit = {
+  override def switchPlayer(): Unit = {
     val currentPlayerIndex = players.indexOf(currentPlayer)
     val nextPlayerIndex = (currentPlayerIndex + 1) % players.length
     currentPlayer = players(nextPlayerIndex)
@@ -33,22 +48,24 @@ class Controller(var gameField: GameField, val players: Array[Player]) extends S
     notifyObservers()
   }
 
-  def getCurrentPlayer: Player = {
+  override def getPlayers(): Array[Player] = players
+
+  override def getCurrentPlayer: Player = {
     currentPlayer
   }
 
-  def getCurrentPlayerIndex: Int = {
+  override def getCurrentPlayerIndex: Int = {
     players.indexOf(currentPlayer)
   }
 
   // 'l' links, 'r' rechts
-  def rotate(tileNumber: Int, direction: Char): Unit = {
+  override def rotate(tileNumber: Int, direction: Char): Unit = {
     this.gameField = gameField.rotate(tileNumber, direction)
 
     notifyObservers()
   }
 
-  def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Boolean = {
+  override def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): Boolean = {
     if (gameField.orbAt(xCoord, yCoord) != -1) {
       false
     } else {
@@ -58,20 +75,20 @@ class Controller(var gameField: GameField, val players: Array[Player]) extends S
     }
   }
 
-  def orbAt(xCoord: Int, yCoord: Int) : Int = {
+  override def orbAt(xCoord: Int, yCoord: Int) : Int = {
     gameField.orbAt(xCoord, yCoord)
   }
 
-  def getAllTiles: Array[Array[Tile]] = {
+  override def getAllTiles: Array[Array[Tile]] = {
     gameField.tiles.clone()
   }
 
-  def getGameFiled: Array[Array[Int]] = {
+  override def getGameFiled: Array[Array[Int]] = {
     gameField.getGameFiled
   }
 
   // Test win condition (-1: Nobody won yet, else: playerNumber)
-  def testWin(): Set[Int] = {
+  override def testWin(): Set[Int] = {
     val actorVertical = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorVertical"+UUID.randomUUID())
     val actorHorizontal = actorSystem.actorOf(GameFieldTestActor.props(), "FieldActorHorizontal"+UUID.randomUUID())
     val futureHorizontal = actorHorizontal ? TestGameFieldMessage(gameField)
