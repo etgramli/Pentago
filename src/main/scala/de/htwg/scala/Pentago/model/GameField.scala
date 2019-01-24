@@ -13,19 +13,15 @@ class GameField(val tiles: Array[Array[Tile]]){
 
   def this(gfArray: Array[Array[Int]]) {
     this()
-    for (x <- 0 until size) {
-      for (y <- 0 until size) {
-        this.placeOrb(x,y,gfArray(x)(y))
-      }
+    for (x <- 0 until size; y <- 0 until size) {
+      this.placeOrb(x,y,gfArray(x)(y))
     }
   }
 
   def getGameFiled: Array[Array[Int]] = {
     val gameFieldData = Array.ofDim[Int](size, size)
-    for (x <- 0 until size) {
-      for (y <- 0 until size) {
-        gameFieldData(x)(y) = orbAt(x, y)
-      }
+    for (x <- 0 until size; y <- 0 until size) {
+      gameFieldData(x)(y) = orbAt(x, y)
     }
     gameFieldData
   }
@@ -113,10 +109,5 @@ class GameField(val tiles: Array[Array[Tile]]){
         tiles(1)(0) == that.tiles(1)(0) &&
         tiles(1)(1) == that.tiles(1)(1)
     case _ => false
-  }
-
-  override def hashCode(): Int = {
-    val state = Seq(size, tiles)
-    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 }
