@@ -40,32 +40,23 @@ class Tile (val userOccupation: Array[Array[Int]]) {
   }
 
   def reduceRotateString(str: String): String = {
-    var left = str.count(_ == 'l')
-    var right = str.count(_ == 'r')
     // Reduce 4 rotations in each direction, because 4 90° rotation does not change the state
-    left = left % 4
-    right = right % 4
+    val left = str.count(_ == 'l') % 4
+    val right = str.count(_ == 'r') % 4
     if (left > right) {
       // Return left - right 'l's
       if (left - right == 3) {
-        return "r"
+        "r"
+      } else {
+        "l" * (left - right)
       }
-      val buf = new StringBuilder()
-      while (left > right) {
-        buf.append('l')
-        left = left - 1
-      }
-      buf.toString()
     } else if (right > left) {
       // Return right - left 'r's
-      if (right - left == 3)
-        return "l"
-      val buf = new StringBuilder()
-      while (right > left) {
-        buf.append('r')
-        right = right - 1
+      if (right - left == 3) {
+        "l"
+      } else {
+        "r" * (right - left)
       }
-      buf.toString()
     } else {
       ""
     }
