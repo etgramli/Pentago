@@ -25,7 +25,7 @@ class Tile (val userOccupation: Array[Array[Int]]) {
     direction match {
           case 'l' => return rotateLeft()
           case 'r' => return rotateRight()
-          case _ => return this
+          case  _  => return this
     }
     this
   }
@@ -42,26 +42,19 @@ class Tile (val userOccupation: Array[Array[Int]]) {
   }
 
   def reduceRotateString(str: String): String = {
-    // Reduce 4 rotations in each direction, because 4 90° rotation does not change the state
+    // Reduce 4 rotations in each direction, because 4 90° rotation does not change the layout of the tile
     val left = str.count(_ == 'l') % 4
     val right = str.count(_ == 'r') % 4
-    if (left > right) {
-      // Return left - right 'l's
-      if (left - right == 3) {
-        "r"
-      } else {
-        "l" * (left - right)
-      }
-    } else if (right > left) {
-      // Return right - left 'r's
-      if (right - left == 3) {
-        "l"
-      } else {
-        "r" * (right - left)
-      }
-    } else {
-      ""
+
+    // Because 3 times left is one time right, and vice versa
+    if (Math.abs(left - right) == 3) {
+      if (right > left)
+        return "l"
+      else
+        return "r"
     }
+    val direction = if (left > right) "l" else "r"
+    direction * Math.abs(left - right)
   }
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[Tile]

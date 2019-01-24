@@ -36,6 +36,17 @@ class TileSpec extends FlatSpec {
     rotated.userOccupation should equal (expected.userOccupation)
   }
 
+  "A Tile" should "not rotate on invalid input" in {
+    val original = new Tile(Array(
+      Array( 1, 1, 1),
+      Array(-1,-1, 2),
+      Array(-1,-1, 2)))
+
+    val rotated = original.rotate('i')
+
+    rotated.userOccupation should equal (original.userOccupation)
+  }
+
   "A Tile" should "have one Orb of Player 1" in {
     val original = new Tile()
     val expected = new Tile(Array(
@@ -94,6 +105,13 @@ class TileSpec extends FlatSpec {
     val oneTimeLeft = (new Tile).reduceRotateString(threeTimesRight)
 
     oneTimeLeft should equal("l")
+  }
+
+  "Three times left" should "be one time right" in {
+    val threeTimesRight = "lll"
+    val oneTimeLeft = (new Tile).reduceRotateString(threeTimesRight)
+
+    oneTimeLeft should equal("r")
   }
 
   "Three Left One Right" should "rotate two times left" in {
