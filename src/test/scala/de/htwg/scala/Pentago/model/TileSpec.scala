@@ -51,12 +51,26 @@ class TileSpec extends FlatSpec {
     val fourLeft = "llll"
     val reducedLeft = (new Tile).reduceRotateString(fourLeft)
 
-    reducedLeft should have size(0)
+    reducedLeft should have size 0
+
 
     val fourRight = "rrrr"
     val reducedRight = (new Tile).reduceRotateString(fourRight)
 
-    reducedRight should have size(0)
+    reducedRight should have size 0
+  }
+
+  "Six times one direction and one opposite direction" should "be one rotation" in {
+    val fourLeft = "lllllrl"
+    val reducedLeft = (new Tile).reduceRotateString(fourLeft)
+
+    reducedLeft should equal("l")
+
+
+    val fourRight = "rrrrrlr"
+    val reducedRight = (new Tile).reduceRotateString(fourRight)
+
+    reducedRight should equal("r")
   }
 
   "Three times right" should "be one time left" in {

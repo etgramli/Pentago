@@ -67,4 +67,53 @@ class GameFieldSpec extends FlatSpec {
 
     copy should equal(original)
   }
+
+
+  "A GameField" should "rotate all Tiles left" in {
+    /*
+    Original:
+    1 1 1 1 1 2
+    0 0 0 0 0 2
+    0 0 0 0 0 2
+    0 0 0 0 0 2
+    0 0 0 0 0 2
+    0 0 0 0 0 2
+     */
+    val original = new GameField(Array(
+      Array(new Tile(Array(Array(1, 1, 1), Array(0, 0, 0), Array(0, 0, 0))), new Tile(Array(Array(1, 1, 2), Array(0, 0, 2), Array(0, 0, 2)))),
+      Array(new Tile(Array(Array(0, 0, 0), Array(0, 0, 0), Array(0, 0, 0))), new Tile(Array(Array(0, 0, 2), Array(0, 0, 2), Array(0, 0, 2))))
+    ))
+    val expected = new GameField(Array(
+      Array(original.tiles(0)(0).rotateLeft(),original.tiles(0)(1).rotateLeft()),
+      Array(original.tiles(1)(0).rotateLeft(), original.tiles(1)(1).rotateLeft())
+    ))
+    val rotated = original.rotate(0, 'l')
+      .rotate(1, 'l')
+      .rotate(2, 'l')
+      .rotate(3, 'l')
+    rotated should equal(expected)
+  }
+
+  "A GameField" should "be the same after converting to array" in {
+    val original = new GameField()
+    val copy = new GameField(original.getGameFiled)
+
+    copy should equal(original)
+  }
+
+  "A GameFiels" should "not equal another type" in {
+    val gameField = new GameField()
+    val tile = new Tile()
+
+    gameField should not equal tile
+  }
+
+  "A GameField" should "not rotate a Tile if invalid input" in {
+    val gameField = new GameField()
+    gameField.placeOrb(0,1,1)
+
+    val notRotated = gameField.rotate(5, 'l')
+
+    gameField should be (notRotated)
+  }
 }
