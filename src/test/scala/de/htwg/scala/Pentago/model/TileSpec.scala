@@ -14,7 +14,9 @@ class TileSpec extends FlatSpec {
       Array(1,0,0),
       Array(1,0,0)
     ))
+
     val rotated = original.rotateLeft()
+
     rotated.userOccupation should equal (expected.userOccupation)
   }
 
@@ -28,23 +30,35 @@ class TileSpec extends FlatSpec {
       Array(0,0,1),
       Array(2,2,1)
     ))
+
     val rotated = original.rotateRight()
+
     rotated.userOccupation should equal (expected.userOccupation)
   }
 
   "A Tile" should "have one Orb of Player 1" in {
-    val original = new Tile(Array(
-      Array(0, 0, 0),
-      Array(0, 0, 0),
-      Array(0, 0, 0)
-    ))
+    val original = new Tile()
     val expected = new Tile(Array(
+      Array(-1, -1, -1),
+      Array(-1, -1,  1),
+      Array(-1, -1, -1)
+    ))
+
+    val placed = original.placeOrb(1, 2, 1)
+
+    placed.userOccupation should equal(expected.userOccupation)
+  }
+
+  "A Player" should "not be able to override orb" in {
+    val original = new Tile(Array(
       Array(0, 0, 0),
       Array(0, 0, 1),
       Array(0, 0, 0)
     ))
-    val placed = original.placeOrb(1, 2, 1)
-    placed.userOccupation should equal(expected.userOccupation)
+
+    val placed = original.placeOrb(1, 2, 2)
+
+    placed should equal(original)
   }
 
   "Four times left" should "be no rotation" in {

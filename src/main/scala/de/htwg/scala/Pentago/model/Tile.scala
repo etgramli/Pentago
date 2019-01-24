@@ -10,6 +10,8 @@ class Tile (val userOccupation: Array[Array[Int]]) {
 
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNum: Int): Tile = {
+    if (userOccupation(xCoord)(yCoord) != -1)
+      return this
     val occupation = this.userOccupation.transpose.transpose[Int]
     occupation(xCoord)(yCoord) = playerNum
     new Tile(occupation)
