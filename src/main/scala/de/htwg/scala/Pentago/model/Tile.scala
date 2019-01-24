@@ -72,9 +72,4 @@ class Tile (val userOccupation: Array[Array[Int]]) {
         userOccupation.deep == that.userOccupation.deep
     case _ => false
   }
-
-  override def hashCode(): Int = {
-    val state = Seq(userOccupation)
-    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
-  }
 }
