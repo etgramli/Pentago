@@ -6,13 +6,13 @@ import Matchers._
 class TileSpec extends FlatSpec {
   "A Tile" should "rotate left" in {
     val original = new Tile(Array(
-        Array(1,1,1),
-        Array(0,0,2),
-        Array(0,0,2)))
+        Array( 1, 1, 1),
+        Array(-1,-1, 2),
+        Array(-1,-1, 2)))
     val expected = new Tile(Array(
-      Array(1,2,2),
-      Array(1,0,0),
-      Array(1,0,0)
+      Array(1, 2, 2),
+      Array(1,-1,-1),
+      Array(1,-1,-1)
     ))
 
     val rotated = original.rotateLeft()
@@ -22,13 +22,13 @@ class TileSpec extends FlatSpec {
 
   "A Tile" should "rotate right" in {
     val original = new Tile(Array(
-      Array(1,1,1),
-      Array(0,0,2),
-      Array(0,0,2)))
+      Array( 1, 1, 1),
+      Array(-1,-1, 2),
+      Array(-1,-1, 2)))
     val expected = new Tile(Array(
-      Array(0,0,1),
-      Array(0,0,1),
-      Array(2,2,1)
+      Array(-1,-1, 1),
+      Array(-1,-1, 1),
+      Array( 2, 2, 1)
     ))
 
     val rotated = original.rotateRight()
@@ -51,9 +51,9 @@ class TileSpec extends FlatSpec {
 
   "A Player" should "not be able to override orb" in {
     val original = new Tile(Array(
-      Array(0, 0, 0),
-      Array(0, 0, 1),
-      Array(0, 0, 0)
+      Array(-1, -1, -1),
+      Array(-1, -1,  1),
+      Array(-1, -1, -1)
     ))
 
     val placed = original.placeOrb(1, 2, 2)
