@@ -116,4 +116,14 @@ class GameFieldSpec extends FlatSpec {
 
     gameField should be (notRotated)
   }
+
+  "A Player" should "not be able to place orb outside GameFiled" in {
+    val original = new GameField()
+
+    val placed_1 = original.placeOrb(-1,  0, 1)
+    val placed_2 = original.placeOrb(0, 25, 2)
+
+    original should equal(placed_1)
+    original should equal(placed_2)
+  }
 }

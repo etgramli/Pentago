@@ -1,5 +1,8 @@
 package de.htwg.scala.Pentago.model
 
+object Tile {
+  val size = 3
+}
 class Tile (val userOccupation: Array[Array[Int]]) {
   def this() {
     this(Array(
@@ -7,7 +10,6 @@ class Tile (val userOccupation: Array[Array[Int]]) {
       Array(-1,-1,-1),
       Array(-1,-1,-1)))
   }
-
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNum: Int): Tile = {
     if (userOccupation(xCoord)(yCoord) != -1)
@@ -42,16 +44,13 @@ class Tile (val userOccupation: Array[Array[Int]]) {
   }
 
   def reduceRotateString(str: String): String = {
-    // Reduce 4 rotations in each direction, because 4 90° rotation does not change the layout of the tile
-    val left = str.count(_ == 'l') % 4
-    val right = str.count(_ == 'r') % 4
+    val rotationsForFullCycle = 4
+    val left = str.count(_ == 'l') % rotationsForFullCycle
+    val right = str.count(_ == 'r') % rotationsForFullCycle
 
     // Because 3 times left is one time right, and vice versa
     if (Math.abs(left - right) == 3) {
-      if (right > left)
-        return "l"
-      else
-        return "r"
+      return if (right > left) "l" else "r"
     }
     val direction = if (left > right) "l" else "r"
     direction * Math.abs(left - right)

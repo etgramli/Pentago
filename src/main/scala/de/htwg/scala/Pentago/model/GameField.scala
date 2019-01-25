@@ -28,41 +28,39 @@ class GameField(val tiles: Array[Array[Tile]]){
 
   def orbAt(xCoord: Int, yCoord: Int): Int = {
     assert(xCoord < size && yCoord < size)
-    val xTileNumber = xCoord / 3
-    val yTileNumber = yCoord / 3
-    val xTileCoord = xCoord % 3
-    val yTileCoord = yCoord % 3
+    val xTileNumber = xCoord / Tile.size
+    val yTileNumber = yCoord / Tile.size
+    val xTileCoord = xCoord % Tile.size
+    val yTileCoord = yCoord % Tile.size
 
     tiles(xTileNumber)(yTileNumber).getOrb(xTileCoord,yTileCoord)
   }
 
   def placeOrb(xCoord: Int, yCoord: Int, playerNumber: Int): GameField = {
-    assert(xCoord < size && yCoord < size)
-    if (orbAt(xCoord, yCoord) != -1)
-      return this   // Do not change anything if place already occupied
+    if (xCoord >= 0 && xCoord < size && yCoord >= 0 && yCoord < size && orbAt(xCoord, yCoord) == -1) {
+      val xTileNumber = xCoord / Tile.size
+      val yTileNumber = yCoord / Tile.size
+      val xTileCoord = xCoord % Tile.size
+      val yTileCoord = yCoord % Tile.size
 
-    val xTileNumber = xCoord / 3
-    val yTileNumber = yCoord / 3
-    val xTileCoord = xCoord % 3
-    val yTileCoord = yCoord % 3
-    (xTileNumber, yTileNumber) match {
-      case (0, 0) => return new GameField(Array(
-        Array(tiles(0)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(0)(1)),
-        Array(tiles(1)(0),                                                tiles(1)(1))
-      ))
-      case (0, 1) => return new GameField(Array(
-        Array(tiles(0)(0), tiles(0)(1).placeOrb(xTileCoord, yTileCoord, playerNumber)),
-        Array(tiles(1)(0), tiles(1)(1))
-      ))
-      case (1, 0) => return new GameField(Array(
-        Array(tiles(0)(0),                                                tiles(0)(1)),
-        Array(tiles(1)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(1)(1))
-      ))
-      case (1, 1) => return new GameField(Array(
-        Array(tiles(0)(0), tiles(0)(1)),
-        Array(tiles(1)(0), tiles(1)(1).placeOrb(xTileCoord, yTileCoord, playerNumber))
-      ))
-      case _ => return this
+      (xTileNumber, yTileNumber) match {
+        case (0, 0) => return new GameField(Array(
+          Array(tiles(0)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(0)(1)),
+          Array(tiles(1)(0), tiles(1)(1))
+        ))
+        case (0, 1) => return new GameField(Array(
+          Array(tiles(0)(0), tiles(0)(1).placeOrb(xTileCoord, yTileCoord, playerNumber)),
+          Array(tiles(1)(0), tiles(1)(1))
+        ))
+        case (1, 0) => return new GameField(Array(
+          Array(tiles(0)(0), tiles(0)(1)),
+          Array(tiles(1)(0).placeOrb(xTileCoord, yTileCoord, playerNumber), tiles(1)(1))
+        ))
+        case (1, 1) => return new GameField(Array(
+          Array(tiles(0)(0), tiles(0)(1)),
+          Array(tiles(1)(0), tiles(1)(1).placeOrb(xTileCoord, yTileCoord, playerNumber))
+        ))
+      }
     }
     this
   }

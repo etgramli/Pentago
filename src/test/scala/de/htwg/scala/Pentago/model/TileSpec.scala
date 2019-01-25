@@ -120,4 +120,11 @@ class TileSpec extends FlatSpec {
 
     noRotate should equal("ll")
   }
+
+  "Tile" should "not equal other type" in {
+    val tile = new Tile()
+    val gameField = new GameField()
+
+    tile should not equal gameField
+  }
 }
