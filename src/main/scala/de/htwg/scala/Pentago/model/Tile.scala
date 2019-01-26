@@ -40,7 +40,10 @@ class Tile (val userOccupation: Array[Array[Int]]) {
   }
 
   def rotateRight(): Tile = {
-    rotateLeft().rotateLeft().rotateLeft() // Because three times left is right
+    new Tile(Array(
+      Array(userOccupation(2)(0), userOccupation(1)(0), userOccupation(0)(0)),
+      Array(userOccupation(2)(1), userOccupation(1)(1), userOccupation(0)(1)),
+      Array(userOccupation(2)(2), userOccupation(1)(2), userOccupation(0)(2))))
   }
 
   def reduceRotateString(str: String): String = {
